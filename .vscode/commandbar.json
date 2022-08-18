@@ -1,0 +1,28 @@
+{
+  "skipTerminateQuickPick": true,
+  "skipSwitchToOutput": false,
+  "skipErrorMessage": true,
+  "commands": [
+    {
+      "text": "Lint:PHPStan",
+      "color": "white",
+      "commandType": "exec",
+      "command": "php -d memory_limit=512M vendor/bin/phpstan analyse -c phpstan.neon",
+      "priority": 2
+    },
+    {
+      "text": "Lint:typoscript",
+      "color": "white",
+      "commandType": "exec",
+      "command": "./vendor/bin/typoscript-lint -c ./.vscode/.typoscript-lint.yml",
+      "priority": 2
+    },
+    {
+      "text": "Git:clean up local branches",
+      "color": "white",
+      "commandType": "exec",
+      "command": "git for-each-ref --format '%(refname:short)' refs/heads | grep -v \"master\\|main\\|develop\\|stage\" | grep -v $(git branch --show-current) | xargs git branch -D",
+      "priority": 2
+    }
+  ]
+}

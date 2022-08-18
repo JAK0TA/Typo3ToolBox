@@ -1,0 +1,57 @@
+{
+  "name": "jakota/debuggerutility",
+  "type": "typo3-cms-extension",
+  "description": "Debugger Utility",
+  "authors": [
+    {
+      "name": "Thomas Lüder",
+      "role": "Product Manager"
+    },
+    {
+      "name": "Michael Krohn",
+      "role": "Developer"
+    }
+  ],
+  "license": "GPL-2.0-or-later",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/tlueder/phpstan-typo3.git"
+    }
+  ],
+  "require": {
+    "doctrine/sql-formatter": "^1.1",
+    "typo3/cms-core": "^9.5 || ^10.4 || ^11",
+    "typo3/cms-extbase": "^9.5 || ^10.4 || ^11"
+  },
+  "require-dev": {},
+  "autoload": {
+    "psr-4": {
+      "JAKOTA\\DebuggerUtility\\": "Classes"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "JAKOTA\\DebuggerUtility\\Tests\\": "Tests"
+    }
+  },
+  "replace": {
+    "typo3-ter/debuggerutility": "self.version"
+  },
+  "config": {
+    "allow-plugins": {
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
+    ]
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "debuggerutility"
+    }
+  }
+}
