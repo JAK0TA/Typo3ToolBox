@@ -13,7 +13,10 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Query;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 
 class DebuggerUtility extends \TYPO3\CMS\Extbase\Utility\DebuggerUtility {
-  public static function debugQuery(QueryBuilder|Query $query, string $title = 'SQL Debug'): void {
+  /**
+   * @param Query|QueryBuilder $query
+   */
+  public static function debugQuery($query, string $title = 'SQL Debug') {
     if ($query instanceof \TYPO3\CMS\Extbase\Persistence\Generic\Query) {
       /** @var Typo3DbQueryParser $queryParser */
       $queryParser = GeneralUtility::makeInstance(Typo3DbQueryParser::class);
