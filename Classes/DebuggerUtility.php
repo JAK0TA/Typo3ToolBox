@@ -19,7 +19,6 @@ class DebuggerUtility extends \TYPO3\CMS\Extbase\Utility\DebuggerUtility {
    */
   public static function debugQuery($query, string $title = 'SQL Debug'): void {
     if ($query instanceof \TYPO3\CMS\Extbase\Persistence\Generic\Query) {
-      /** @var Typo3Version $typo3Version */
       $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
       if (version_compare($typo3Version->getVersion(), '10.4.0') >= 0) {
         $queryParser = GeneralUtility::makeInstance(Typo3DbQueryParser::class);
