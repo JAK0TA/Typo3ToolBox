@@ -17,7 +17,7 @@ final class CustomHtmlHighlighter implements \Doctrine\SqlFormatter\Highlighter 
   public const HIGHLIGHT_PRE = 'pre';
 
   /** @var array<string, string> */
-  private array $htmlAttributes;
+  private $htmlAttributes;
 
   /**
    * @param array<string, string> $htmlAttributes
