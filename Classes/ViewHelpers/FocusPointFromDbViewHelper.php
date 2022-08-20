@@ -38,7 +38,6 @@ class FocusPointFromDbViewHelper extends AbstractViewHelper {
     if (version_compare($typo3Version->getVersion(), '11.5.0') >= 0) {
       $crop = $queryBuilder->executeQuery()->fetchOne();
     } else {
-      // @phpstan-ignore-next-line
       $focus = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
       $crop = $focus[0]['crop'] ?? false;
     }

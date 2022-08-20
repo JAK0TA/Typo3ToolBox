@@ -40,7 +40,6 @@ class FindImageMetadataFromDBViewHelper extends AbstractViewHelper {
       return $queryBuilder->executeQuery()->fetchAssociative();
     }
 
-    // @phpstan-ignore-next-line
     return $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
   }
 }

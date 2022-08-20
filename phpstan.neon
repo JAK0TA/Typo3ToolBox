@@ -1,5 +1,6 @@
 includes:
     - vendor/saschaegerer/phpstan-typo3/extension.neon
+    - PHPStan/conditional.config.php
 
 parameters:
   # Use local .cache dir instead of /tmp
