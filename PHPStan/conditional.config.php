@@ -2,72 +2,74 @@
 
 declare(strict_types=1);
 
+use TYPO3\CMS\Core\Information\Typo3Version;
+
 $config = [];
 
-if (!interface_exists(Stringable::class)) {
-  // compatbility with PHP <8
+$config['parameters']['ignoreErrors'][] = [
+  'message' => '#Cannot call method fetchAll\(\) on Doctrdddine\\DBAL\\Result|int.#',
+  'path' => '../Classes/ViewHelpers/FindImageMetadataFromDBViewHelper.php',
+  'count' => 1,
+];
+$config['parameters']['ignoreErrors'][] = [
+  'message' => '#Cannot call method fetchAll\(\) on Doctrine\\DBAL\\Result|int.#',
+  'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
+  'count' => 1,
+];
+
+$typo3Version = new Typo3Version();
+if (version_compare($typo3Version->getVersion(), '11.5.0', '<')) {
   $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::executeQuery\(\).#',
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder::executeQuery\(\).#',
     'path' => '../Classes/ViewHelpers/FindImageMetadataFromDBViewHelper.php',
     'count' => 1,
   ];
   $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::executeQuery\(\).#',
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder::executeQuery\(\).#',
     'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
-    'count' => 1,
-  ];
-  $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::getOffsetLeft\(\).#',
-    'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
-    'count' => 1,
-  ];
-  $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::getOffsetTop\(\).#',
-    'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
-    'count' => 1,
-  ];
-  $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::getHeight\(\).#',
-    'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
-    'count' => 1,
-  ];
-  $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::getWidth\(\).#',
-    'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
-    'count' => 1,
-  ];
-  $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::getOffsetLeft\(\).#',
-    'path' => '../Classes/ViewHelpers/FocusPointViewHelper.php',
-    'count' => 1,
-  ];
-  $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::getOffsetTop\(\).#',
-    'path' => '../Classes/ViewHelpers/FocusPointViewHelper.php',
-    'count' => 1,
-  ];
-  $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::getHeight\(\).#',
-    'path' => '../Classes/ViewHelpers/FocusPointViewHelper.php',
-    'count' => 1,
-  ];
-  $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Call to an undefined method [a-zA-Z0-9\\_]+::getWidth\(\).#',
-    'path' => '../Classes/ViewHelpers/FocusPointViewHelper.php',
     'count' => 1,
   ];
 }
 
-if (interface_exists(Stringable::class)) {
-  // compatbility with PHP >=8
+if (version_compare($typo3Version->getVersion(), '10.4.0', '<')) {
   $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Cannot call method [a-zA-Z0-9\\_]+::fetchAll\(\) on Doctrine\\DBAL\\Result|int.#',
-    'path' => '../Classes/ViewHelpers/FindImageMetadataFromDBViewHelper.php',
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\ImageManipulation\\\\Area::getOffsetLeft\(\).#',
+    'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
     'count' => 1,
   ];
   $config['parameters']['ignoreErrors'][] = [
-    'message' => '#Cannot call method [a-zA-Z0-9\\_]+::fetchAll\(\) on Doctrine\\DBAL\\Result|int.#',
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\ImageManipulation\\\\Area::getOffsetTop\(\).#',
     'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
+    'count' => 1,
+  ];
+  $config['parameters']['ignoreErrors'][] = [
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\ImageManipulation\\\\Area::getHeight\(\).#',
+    'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
+    'count' => 1,
+  ];
+  $config['parameters']['ignoreErrors'][] = [
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\ImageManipulation\\\\Area::getWidth\(\).#',
+    'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
+    'count' => 1,
+  ];
+  $config['parameters']['ignoreErrors'][] = [
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\ImageManipulation\\\\Area::getOffsetLeft\(\).#',
+    'path' => '../Classes/ViewHelpers/FocusPointViewHelper.php',
+    'count' => 1,
+  ];
+  $config['parameters']['ignoreErrors'][] = [
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\ImageManipulation\\\\Area::getOffsetTop\(\).#',
+    'path' => '../Classes/ViewHelpers/FocusPointViewHelper.php',
+    'count' => 1,
+  ];
+  $config['parameters']['ignoreErrors'][] = [
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\ImageManipulation\\\\Area::getHeight\(\).#',
+    'path' => '../Classes/ViewHelpers/FocusPointViewHelper.php',
+    'count' => 1,
+  ];
+  $config['parameters']['ignoreErrors'][] = [
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Imaging\\\\ImageManipulation\\\\Area::getWidth\(\).#',
+    'path' => '../Classes/ViewHelpers/FocusPointViewHelper.php',
     'count' => 1,
   ];
 }
