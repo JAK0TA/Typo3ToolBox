@@ -56,4 +56,10 @@ Add to template
 {t3tb:findImageMetadataFromDB(uid:image.originalResource.properties.file,language:image.originalResource.properties.sys_language_uid)}
 ```
 
+### Relative Date
+
+```Code
+<t3tb:relativeDate value="{newsItem.datetime}"/>
+```
+
 TBD
