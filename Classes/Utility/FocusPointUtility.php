@@ -5,15 +5,8 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Utility;
 
-use TYPO3\CMS\Core\Imaging\ImageManipulation\Area;
-
 class FocusPointUtility {
-  public static function getFocusPoint(string $type, Area $focusArea): float {
-    $xCrop = $focusArea->getOffsetLeft();
-    $yCrop = $focusArea->getOffsetTop();
-    $height = $focusArea->getHeight();
-    $width = $focusArea->getWidth();
-
+  public static function getFocusPoint(string $type, float $xCrop, float $yCrop, float $height, float $width): float {
     switch ($type) {
       case 'left':
         return round(($xCrop + $width / 2) * 100, -1);
