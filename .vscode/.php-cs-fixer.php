@@ -8,8 +8,38 @@ $finder = PhpCsFixer\Finder::create()
   ->ignoreVCSIgnored(true)
 ;
 
-return (new PhpCsFixer\Config())
-  ->setRules([
+$toolInfo = new PhpCsFixer\ToolInfo();
+
+$csFixerVersion = $toolInfo->getVersion();
+if (false !== stripos($csFixerVersion, ':')) {
+  $csFixerVersion = substr($csFixerVersion, 0, stripos($csFixerVersion, ':'));
+}
+
+if (version_compare($csFixerVersion, '3.9.0', '<')) {
+  $rules = [
+    '@PhpCsFixer' => true,
+    'braces' => [
+      'position_after_functions_and_oop_constructs' => 'same',
+    ],
+    'no_whitespace_before_comma_in_array' => true,
+    'whitespace_after_comma_in_array' => true,
+    'ordered_class_elements' => [
+      'sort_algorithm' => 'alpha',
+    ],
+    'ordered_imports' => [
+      'sort_algorithm' => 'alpha',
+    ],
+    'class_attributes_separation' => [
+      'elements' => [
+        'const' => 'one',
+        'method' => 'one',
+        'property' => 'one',
+        'trait_import' => 'one',
+      ],
+    ],
+  ];
+} else {
+  $rules = [
     '@PhpCsFixer' => true,
     'braces' => [
       'position_after_functions_and_oop_constructs' => 'same',
@@ -31,7 +61,11 @@ return (new PhpCsFixer\Config())
         'trait_import' => 'one',
       ],
     ],
-  ])
+  ];
+}
+
+return (new PhpCsFixer\Config())
+  ->setRules($rules)
   ->setFinder($finder)
   ->setLineEnding("\n")
   ->setIndent('  ')
