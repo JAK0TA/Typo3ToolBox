@@ -39,3 +39,13 @@ Debug your SQL queries made easy.
 
     DebuggerUtility::debugQuery($queryBuilder)
 ```
+
+## ViewHelpers
+
+**Find image metadata from DB**
+
+```Code
+{t3tb:findImageMetadataFromDB(uid:image.originalResource.properties.file,language:image.originalResource.properties.sys_language_uid)}
+```
+
+TBD
