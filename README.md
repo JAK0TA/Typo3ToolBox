@@ -42,6 +42,14 @@ Debug your SQL queries made easy.
 
 ## ViewHelpers
 
+### install
+
+Add to template
+
+```HTML
+<html xmlns:t3tb="http://typo3.org/ns/JAKOTA/Typo3ToolBox/ViewHelpers" data-namespace-typo3-fluid="true">
+```
+
 ### Find image metadata from DB
 
 ```Code
