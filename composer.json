@@ -1,7 +1,7 @@
 {
-  "name": "jakota/debuggerutility",
+  "name": "jakota/typo3toolbox",
   "type": "typo3-cms-extension",
-  "description": "Debugger Utility",
+  "description": "Typo3 ToolBox",
   "authors": [
     {
       "name": "Thomas Lüder",
@@ -37,11 +37,11 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "JAKOTA\\DebuggerUtility\\Tests\\": "Tests"
+      "JAKOTA\\Typo3ToolBox\\Tests\\": "Tests"
     }
   },
   "replace": {
-    "typo3-ter/debuggerutility": "self.version"
+    "typo3-ter/typo3toolbox": "self.version"
   },
   "config": {
     "allow-plugins": {
@@ -56,7 +56,7 @@
   },
   "extra": {
     "typo3/cms": {
-      "extension-key": "debuggerutility"
+      "extension-key": "typo3toolbox"
     }
   }
 }

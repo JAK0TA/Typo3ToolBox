@@ -3,7 +3,7 @@
 // Copyright JAKOTA Design Group GmbH. All rights reserved.
 declare(strict_types=1);
 
-namespace JAKOTA\DebuggerUtility\SqlFormatter;
+namespace JAKOTA\Typo3ToolBox\SqlFormatter;
 
 use Doctrine\SqlFormatter\Token;
 use const ENT_COMPAT;

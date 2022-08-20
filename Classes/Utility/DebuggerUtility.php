@@ -3,10 +3,10 @@
 // Copyright JAKOTA Design Group GmbH. All rights reserved.
 declare(strict_types=1);
 
-namespace JAKOTA\DebuggerUtility;
+namespace JAKOTA\Typo3ToolBox\Utility;
 
 use Doctrine\SqlFormatter\SqlFormatter;
-use JAKOTA\DebuggerUtility\SqlFormatter\CustomHtmlHighlighter;
+use JAKOTA\Typo3ToolBox\SqlFormatter\CustomHtmlHighlighter;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

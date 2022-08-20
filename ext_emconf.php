@@ -1,8 +1,8 @@
 <?php
 
 $EM_CONF[$_EXTKEY] = [
-    'title' => 'Debugger Utility',
-    'description' => 'Debugger Utility',
+    'title' => 'Typo3 ToolBox',
+    'description' => 'ToolBox of Utility functions and ViewHelpers',
     'category' => 'misc',
     'author' => 'Thomas Lüder, Michael Krohn',
     'author_email' => 'lueder@jakota.de, krohn@jakota.de',

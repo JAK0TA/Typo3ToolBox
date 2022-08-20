@@ -1,16 +1,22 @@
-# TYPO3 DebuggerUtility for SQL queries
+# Typo3 ToolBox
 
-Debug your SQL queries made easy.
+ToolBox of Utility functions and ViewHelpers.
 
 ## Configuration
 
 To use this extension, require it in [Composer](https://getcomposer.org/):
 
 ```Shell
-composer require --dev jakota/debuggerutility
+composer require --dev jakota/typo3toolbox
 ```
 
-### Dump SQL Query for createQuery
+## Utility functions
+
+### DebuggerUtility for SQL queries
+
+Debug your SQL queries made easy.
+
+**Dump SQL Query for createQuery**
 
 ```PHP
     $query = $this->createQuery();
@@ -18,7 +24,7 @@ composer require --dev jakota/debuggerutility
     DebuggerUtility::debugQuery($query)
 ```
 
-### Dump SQL Query for QueryBuilder
+**Dump SQL Query for QueryBuilder**
 
 ```PHP
     $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable('table')->createQueryBuilder();
