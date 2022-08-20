@@ -26,7 +26,7 @@ class FindImageMetadataFromDBViewHelper extends AbstractViewHelper {
   /**
    * @return array<string,mixed>|false
    */
-  public function render(): array|false {
+  public function render() {
     $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_file_metadata');
     $queryBuilder = $queryBuilder
       ->select('*')
