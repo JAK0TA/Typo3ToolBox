@@ -12,7 +12,11 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 abstract class MiddlewareAbstract implements MiddlewareInterface {
-  protected RequestHandlerInterface $handler;
+  /**
+   *
+   * @var RequestHandlerInterface
+   */
+  protected $handler;
 
   /**
    * @var array<string, array<string, string>>
