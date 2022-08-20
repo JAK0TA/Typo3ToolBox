@@ -13,7 +13,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 abstract class MiddlewareAbstract implements MiddlewareInterface {
   /**
-   *
    * @var RequestHandlerInterface
    */
   protected $handler;
@@ -29,7 +28,6 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
   protected $queryParams = [];
 
   /**
-   *
    * @var ServerRequestInterface
    */
   protected $request;
@@ -40,13 +38,11 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
   protected $requestBody = [];
 
   /**
-   *
    * @var ?ResponseInterface
    */
   protected $response;
 
   /**
-   *
    * @var ResponseFactoryInterface
    */
   protected $responseFactory;

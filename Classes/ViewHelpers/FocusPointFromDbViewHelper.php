@@ -39,7 +39,7 @@ class FocusPointFromDbViewHelper extends AbstractViewHelper {
       $crop = $queryBuilder->executeQuery()->fetchOne();
     } else {
       $focus = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
-      $crop = ( (array)($focus[0] ?? []))['crop'] ?? false;
+      $crop = ((array) ($focus[0] ?? []))['crop'] ?? false;
     }
 
     if (is_bool($crop)) {

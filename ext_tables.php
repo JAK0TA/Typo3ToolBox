@@ -1,4 +1,6 @@
 <?php
-defined('TYPO3') || die();
 
-(static function() {})();
+defined('TYPO3') || exit();
+
+(static function () {
+})();
