@@ -7,7 +7,7 @@ ToolBox of Utility functions and ViewHelpers.
 To use this extension, require it in [Composer](https://getcomposer.org/):
 
 ```Shell
-composer require --dev jakota/typo3toolbox
+composer require jakota/typo3toolbox
 ```
 
 ## Utility functions
