@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  JAKOTA\Typo3ToolBox\:
+    resource: '../Classes/*'
