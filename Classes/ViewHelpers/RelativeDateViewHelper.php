@@ -16,7 +16,10 @@ class RelativeDateViewHelper extends AbstractViewHelper {
     $this->registerArgument('value', 'DateTime', 'datetime to format');
   }
 
-  public function render(): string|null {
+  /**
+   * @return null|string
+   */
+  public function render() {
     /** @var \DateTime $date */
     $date = $this->arguments['value'];
     $timestamp = $date->getTimestamp();
