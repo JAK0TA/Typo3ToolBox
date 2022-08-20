@@ -39,7 +39,7 @@ class FocusPointFromDbViewHelper extends AbstractViewHelper {
       $crop = $queryBuilder->executeQuery()->fetchOne();
     } else {
       $focus = $queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
-      $crop = $focus[0]['crop'] ?? false;
+      $crop = ( (array)($focus[0] ?? []))['crop'] ?? false;
     }
 
     if (is_bool($crop)) {
@@ -54,7 +54,7 @@ class FocusPointFromDbViewHelper extends AbstractViewHelper {
       $height = $focusArea->getHeight();
       $width = $focusArea->getWidth();
     } else {
-      $cropJson = (object) json_decode($crop);
+      $cropJson = (object) json_decode(strval($crop));
       $xCrop = floatval($cropJson->{'$cropVariant'}->focusArea->x);
       $yCrop = floatval($cropJson->{'$cropVariant'}->focusArea->y);
       $height = floatval($cropJson->{'$cropVariant'}->focusArea->height);
