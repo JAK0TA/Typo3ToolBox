@@ -33,7 +33,7 @@
   },
   "autoload": {
     "psr-4": {
-      "JAKOTA\\DebuggerUtility\\": "Classes"
+      "JAKOTA\\Typo3ToolBox\\": "Classes"
     }
   },
   "autoload-dev": {
