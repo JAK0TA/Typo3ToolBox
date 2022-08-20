@@ -7,6 +7,11 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 $config = [];
 
 $config['parameters']['ignoreErrors'][] = [
+  'message' => '#Cannot call method fetchAll\(\) on Doctrine\\DBAL\\Result|int.#',
+  'path' => '../Classes/Routing/Aspect/TransSitePersistedAliasMapper.php',
+  'count' => 1,
+];
+$config['parameters']['ignoreErrors'][] = [
   'message' => '#Cannot call method fetchAll\(\) on Doctrdddine\\DBAL\\Result|int.#',
   'path' => '../Classes/ViewHelpers/FindImageMetadataFromDBViewHelper.php',
   'count' => 1,
@@ -19,6 +24,11 @@ $config['parameters']['ignoreErrors'][] = [
 
 $typo3Version = new Typo3Version();
 if (version_compare($typo3Version->getVersion(), '11.5.0', '<')) {
+  $config['parameters']['ignoreErrors'][] = [
+    'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder::executeQuery\(\).#',
+    'path' => '../Classes/Routing/Aspect/TransSitePersistedAliasMapper.php',
+    'count' => 1,
+  ];
   $config['parameters']['ignoreErrors'][] = [
     'message' => '#Call to an undefined method TYPO3\\\\CMS\\\\Core\\\\Database\\\\Query\\\\QueryBuilder::executeQuery\(\).#',
     'path' => '../Classes/ViewHelpers/FindImageMetadataFromDBViewHelper.php',
