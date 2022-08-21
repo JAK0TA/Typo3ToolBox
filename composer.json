@@ -1,7 +1,7 @@
 {
   "name": "jakota/typo3toolbox",
   "type": "typo3-cms-extension",
-  "description": "Typo3 ToolBox",
+  "description": "Typo3 ToolBox of Utility functions and ViewHelpers.",
   "authors": [
     {
       "name": "Thomas Lüder",
