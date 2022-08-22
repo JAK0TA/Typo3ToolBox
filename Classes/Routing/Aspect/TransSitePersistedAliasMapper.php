@@ -41,7 +41,7 @@ class TransSitePersistedAliasMapper extends PersistedAliasMapper {
 
     $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
     if (version_compare($typo3Version->getVersion(), '11.5.0') >= 0) {
-      $results = $queryBuilder->executeQuery()->fetchAssociative();
+      $results = $queryBuilder->executeQuery()->fetchAllAssociative();
     } else {
       $results = $queryBuilder->execute()->fetchAll();
     }
