@@ -47,7 +47,7 @@ class QueryUtility {
       $results = $queryBuilder->execute()->fetchAll();
     }
 
-    // Map the result to News model
+    // Map the result to class model
     return $dataMapper->map($className, $results);
   }
 }
