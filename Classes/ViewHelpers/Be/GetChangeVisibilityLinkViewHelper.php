@@ -3,7 +3,7 @@
 // Copyright JAKOTA Design Group GmbH. All rights reserved.
 declare(strict_types=1);
 
-namespace JAKOTA\Newsletter\ViewHelpers;
+namespace JAKOTA\Typo3ToolBox\ViewHelpers\Be;
 
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
