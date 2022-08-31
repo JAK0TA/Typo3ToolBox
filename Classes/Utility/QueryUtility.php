@@ -9,17 +9,17 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper;
-use TYPO3\CMS\Extbase\Persistence\Generic\Query;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 class QueryUtility {
   /**
    * @template T of object
    *
-   * @param class-string<T> $className name of the class for the data mapper
-   * @param Query           $query
-   * @param string          $fieldName The fieldName to order by. Will be quoted according to database platform automatically.
-   * @param string          $order     The ordering direction. No automatic quoting/escaping.
+   * @param class-string<T>   $className name of the class for the data mapper
+   * @param QueryInterface<T> $query
+   * @param string            $fieldName The fieldName to order by. Will be quoted according to database platform automatically.
+   * @param string            $order     The ordering direction. No automatic quoting/escaping.
    *
    * @return T[]
    */
