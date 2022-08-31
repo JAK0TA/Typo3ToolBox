@@ -16,14 +16,13 @@ class QueryUtility {
   /**
    * @template T of object
    *
-   * @param class-string<T>   $className name of the class for the data mapper
    * @param QueryInterface<T> $query
    * @param string            $fieldName The fieldName to order by. Will be quoted according to database platform automatically.
    * @param string            $order     The ordering direction. No automatic quoting/escaping.
    *
    * @return T[]
    */
-  public static function queryOrderBy($className, $query, $fieldName, $order = null) {
+  public static function queryOrderBy($query, $fieldName, $order = null) {
     $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
 
     if (version_compare($typo3Version->getVersion(), '10.4.0') >= 0) {
@@ -48,6 +47,6 @@ class QueryUtility {
     }
 
     // Map the result to class model
-    return $dataMapper->map($className, $results);
+    return $dataMapper->map($query->getType(), $results);
   }
 }
