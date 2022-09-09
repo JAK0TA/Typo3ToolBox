@@ -121,22 +121,6 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
   }
 
   protected function isPathWithQuery(string $expectedPathWithQuery): bool {
-    if (!function_exists('str_starts_with')) {
-      function str_starts_with($haystack, $needle) {
-        return '' !== (string) $needle && 0 === strncmp($haystack, $needle, strlen($needle));
-      }
-    }
-    if (!function_exists('str_ends_with')) {
-      function str_ends_with($haystack, $needle) {
-        return '' !== $needle && substr($haystack, -strlen($needle)) === (string) $needle;
-      }
-    }
-    if (!function_exists('str_contains')) {
-      function str_contains($haystack, $needle) {
-        return '' !== $needle && false !== mb_strpos($haystack, $needle);
-      }
-    }
-
     $path = $this->request->getUri()->getPath();
     $query = $this->request->getUri()->getQuery();
     $pathWithQuery = $path.'?'.$query;
@@ -146,17 +130,17 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
       $isPath = true;
       $lastKey = count($expectedPathWithQueryFragments) - 1;
       foreach ($expectedPathWithQueryFragments as $key => $expectedPathWithQueryFragment) {
-        if (0 == $key && !str_starts_with($pathWithQuery, $expectedPathWithQueryFragment)) {
+        if (0 == $key && !$this->strStartsWith($pathWithQuery, $expectedPathWithQueryFragment)) {
           $isPath = false;
 
           break;
         }
-        if ($key != $lastKey && !str_contains($pathWithQuery, $expectedPathWithQueryFragment)) {
+        if ($key != $lastKey && !$this->strContains($pathWithQuery, $expectedPathWithQueryFragment)) {
           $isPath = false;
 
           break;
         }
-        if ($key == $lastKey && !str_ends_with($pathWithQuery, $expectedPathWithQueryFragment)) {
+        if ($key == $lastKey && !$this->strEndsWith($pathWithQuery, $expectedPathWithQueryFragment)) {
           $isPath = false;
 
           break;
@@ -203,5 +187,29 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
     }
 
     return $this->isPathWithVariables($expectedPath, $path);
+  }
+
+  private function strContains(string $haystack, string $needle): bool {
+    if (!function_exists('str_contains')) {
+      return '' !== $needle && false !== mb_strpos($haystack, $needle);
+    }
+
+    return str_contains($haystack, $needle);
+  }
+
+  private function strEndsWith(string $haystack, string $needle): bool {
+    if (!function_exists('str_ends_with')) {
+      return '' !== $needle && substr($haystack, -strlen($needle)) === (string) $needle;
+    }
+
+    return str_ends_with($haystack, $needle);
+  }
+
+  private function strStartsWith(string $haystack, string $needle): bool {
+    if (!function_exists('str_starts_with')) {
+      return '' !== (string) $needle && 0 === strncmp($haystack, $needle, strlen($needle));
+    }
+
+    return str_starts_with($haystack, $needle);
   }
 }
