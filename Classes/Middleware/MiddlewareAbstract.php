@@ -52,7 +52,7 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
 
   public function checkRequest(string $path, callable $callable, string $method): void {
     if ($this->request->getMethod() == $method) {
-      if ($this->isPath($path) || $this->isRequestTarget($path)) {
+      if ($this->isPathWithQuery($path) || $this->isPath($path) || $this->isRequestTarget($path)) {
         $this->requestBody = $this->request->getParsedBody() ?? [];
         $this->queryParams = $this->request->getQueryParams();
         $this->response = $callable($this->queryParams, $this->pathParams[$path] ?? [], $this->requestBody);
@@ -120,6 +120,39 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
     return $this->isPathWithVariables($expectedPath, $path);
   }
 
+  protected function isPathWithQuery(string $expectedPathWithQuery): bool {
+    $path = $this->request->getUri()->getPath();
+    $query = $this->request->getUri()->getQuery();
+    $pathWithQuery = $path.'?'.$query;
+    if (1 == preg_match('/\.\*/', $expectedPathWithQuery)) {
+      $expectedPathWithQueryFragments = explode('.*', $expectedPathWithQuery);
+
+      $isPath = true;
+      $lastKey = count($expectedPathWithQueryFragments) - 1;
+      foreach ($expectedPathWithQueryFragments as $key => $expectedPathWithQueryFragment) {
+        if (0 == $key && !$this->strStartsWith($pathWithQuery, $expectedPathWithQueryFragment)) {
+          $isPath = false;
+
+          break;
+        }
+        if ($key != $lastKey && !$this->strContains($pathWithQuery, $expectedPathWithQueryFragment)) {
+          $isPath = false;
+
+          break;
+        }
+        if ($key == $lastKey && !$this->strEndsWith($pathWithQuery, $expectedPathWithQueryFragment)) {
+          $isPath = false;
+
+          break;
+        }
+      }
+
+      return $isPath;
+    }
+
+    return $pathWithQuery == $expectedPathWithQuery ? true : false;
+  }
+
   protected function isPathWithVariables(string $expectedPath, string $path): bool {
     $pathFragments = preg_split('/\//', $path, 0, PREG_SPLIT_NO_EMPTY) ?: [];
     $expectedPathFragments = preg_split('/\//', $expectedPath, 0, PREG_SPLIT_NO_EMPTY) ?: [];
@@ -154,5 +187,29 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
     }
 
     return $this->isPathWithVariables($expectedPath, $path);
+  }
+
+  private function strContains(string $haystack, string $needle): bool {
+    if (!function_exists('str_contains')) {
+      return '' !== $needle && false !== mb_strpos($haystack, $needle);
+    }
+
+    return str_contains($haystack, $needle);
+  }
+
+  private function strEndsWith(string $haystack, string $needle): bool {
+    if (!function_exists('str_ends_with')) {
+      return '' !== $needle && substr($haystack, -strlen($needle)) === (string) $needle;
+    }
+
+    return str_ends_with($haystack, $needle);
+  }
+
+  private function strStartsWith(string $haystack, string $needle): bool {
+    if (!function_exists('str_starts_with')) {
+      return '' !== (string) $needle && 0 === strncmp($haystack, $needle, strlen($needle));
+    }
+
+    return str_starts_with($haystack, $needle);
   }
 }
