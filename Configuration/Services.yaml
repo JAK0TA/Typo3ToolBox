@@ -6,3 +6,5 @@ services:
 
   JAKOTA\Typo3ToolBox\:
     resource: '../Classes/*'
+    exclude:
+      - '../Classes/Domain/Model/*'
