@@ -52,7 +52,7 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
 
   public function checkRequest(string $path, callable $callable, string $method): void {
     if ($this->request->getMethod() == $method) {
-      if ($this->isPath($path) || $this->isRequestTarget($path)) {
+      if ($this->isUri($path) || $this->isPath($path) || $this->isRequestTarget($path)) {
         $this->requestBody = $this->request->getParsedBody() ?? [];
         $this->queryParams = $this->request->getQueryParams();
         $this->response = $callable($this->queryParams, $this->pathParams[$path] ?? [], $this->requestBody);
@@ -154,5 +154,54 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
     }
 
     return $this->isPathWithVariables($expectedPath, $path);
+  }
+
+  protected function isUri(string $expectedPath): bool {
+    if (!function_exists('str_starts_with')) {
+      function str_starts_with($haystack, $needle) {
+        return '' !== (string) $needle && 0 === strncmp($haystack, $needle, strlen($needle));
+      }
+    }
+    if (!function_exists('str_ends_with')) {
+      function str_ends_with($haystack, $needle) {
+        return '' !== $needle && substr($haystack, -strlen($needle)) === (string) $needle;
+      }
+    }
+    if (!function_exists('str_contains')) {
+      function str_contains($haystack, $needle) {
+        return '' !== $needle && false !== mb_strpos($haystack, $needle);
+      }
+    }
+
+    $path = $this->request->getUri()->getPath();
+    $query = $this->request->getUri()->getQuery();
+    $uri = $path.'?'.$query;
+    if (1 == preg_match('/\.\*/', $expectedPath)) {
+      $expectedPathFragments = explode('.*', $expectedPath);
+
+      $isPath = true;
+      $lastKey = count($expectedPathFragments) - 1;
+      foreach ($expectedPathFragments as $key => $expectedPathFragment) {
+        if (0 == $key && !str_starts_with($uri, $expectedPathFragment)) {
+          $isPath = false;
+
+          break;
+        }
+        if ($key != $lastKey && !str_contains($uri, $expectedPathFragment)) {
+          $isPath = false;
+
+          break;
+        }
+        if ($key == $lastKey && !str_ends_with($uri, $expectedPathFragment)) {
+          $isPath = false;
+
+          break;
+        }
+      }
+
+      return $isPath;
+    }
+
+    return $uri == $expectedPath ? true : false;
   }
 }
