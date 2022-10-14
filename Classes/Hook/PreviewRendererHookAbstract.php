@@ -16,7 +16,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
-abstract class AbstractPreviewRendererHook implements PageLayoutViewDrawItemHookInterface {
+abstract class PreviewRendererHookAbstract implements PageLayoutViewDrawItemHookInterface {
   protected string $contentTable = 'tt_content';
 
   protected string $cType = '';
