@@ -104,6 +104,9 @@ abstract class AbstractPreviewRendererHook implements PageLayoutViewDrawItemHook
       /** @var int[] */
       $slidesId = array_map('intval', explode(',', strval($flexform['slides'])));
 
+      $images = [];
+      $videos = [];
+
       $contentData = $this->getContentData($slidesId);
       foreach ($slidesId as $slideId) {
         $images[$slideId] = $this->getFiles($this->fieldnameImage, $slideId);
