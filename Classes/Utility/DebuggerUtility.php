@@ -69,23 +69,28 @@ class DebuggerUtility extends \TYPO3\CMS\Extbase\Utility\DebuggerUtility {
   }
 
   /**
-   * @param array<string, array<float|int|string>|int|string> $params
+   * @param array<string, array<float|int|string>|int|string> $dcValues
    */
-  private static function replaceParameters(string $sql, array $params): string {
-    $search = [];
-    $replace = [];
-    foreach ($params as $k => $v) {
-      $search[] = ':'.$k;
-      $type = gettype($v);
-      if (in_array($type, ['integer'])) {
-        $replace[] = $v;
-      } elseif ('array' == $type) {
-        $replace[] = implode(', ', (array) $v);
-      } else {
-        $replace[] = '\''.strval($v).'\'';
+  private static function replaceParameters(string $sql, array $dcValues): string {
+    $dcValuesFull = [];
+    foreach ($dcValues as $k => $v) {
+      if (is_array($v)) {
+        foreach ($v as &$n) {
+          if (!is_numeric($n)) {
+            $n = "'".addslashes($n)."'";
+          }
+        }
+        $v = implode(',', $v);
+      } elseif (!is_numeric($v)) {
+        $v = "'".addslashes($v)."'";
       }
+      $dcValuesFull[":{$k}"] = $v;
     }
 
-    return str_replace($search, $replace, $sql);
+    uksort($dcValuesFull, function ($a, $b) {
+      return strlen($a) > strlen($b) ? -1 : 1;
+    });
+
+    return str_replace(array_keys($dcValuesFull), array_values($dcValuesFull), $sql);
   }
 }
