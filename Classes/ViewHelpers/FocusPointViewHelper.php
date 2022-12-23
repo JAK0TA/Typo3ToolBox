@@ -39,10 +39,10 @@ class FocusPointViewHelper extends AbstractViewHelper {
       $width = $focusArea->getWidth();
     } else {
       $cropJson = (object) json_decode($crop);
-      $xCrop = floatval($cropJson->{'$cropVariant'}->focusArea->x);
-      $yCrop = floatval($cropJson->{'$cropVariant'}->focusArea->y);
-      $height = floatval($cropJson->{'$cropVariant'}->focusArea->height);
-      $width = floatval($cropJson->{'$cropVariant'}->focusArea->width);
+      $xCrop = floatval($cropJson->{$cropVariant}->focusArea->x);
+      $yCrop = floatval($cropJson->{$cropVariant}->focusArea->y);
+      $height = floatval($cropJson->{$cropVariant}->focusArea->height);
+      $width = floatval($cropJson->{$cropVariant}->focusArea->width);
     }
 
     return FocusPointUtility::getFocusPoint($type, $xCrop, $yCrop, $height, $width);
