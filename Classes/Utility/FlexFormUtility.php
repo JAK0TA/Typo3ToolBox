@@ -30,16 +30,16 @@ class FlexFormUtility {
   }
 
   /**
-   * @param array<string, mixed> $sheetArray
-   * @param array<string, mixed> $fieldNameArr
+   * @param array<string, mixed>     $sheetArray
+   * @param array<int|string, mixed> $fieldNameArr
    */
   public static function getFlexFormValueFromSheetArray(array $sheetArray, array $fieldNameArr, string $value): ?string {
     $tempArr = $sheetArray;
-    foreach ($fieldNameArr as $k => $v) {
+    foreach ($fieldNameArr as $v) {
       if (MathUtility::canBeInterpretedAsInteger($v)) {
         if (is_array($tempArr)) {
           $c = 0;
-          foreach ($tempArr as $idx => $values) {
+          foreach ($tempArr as $values) {
             if ($c == $v) {
               $tempArr = $values;
 
