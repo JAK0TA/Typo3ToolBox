@@ -28,7 +28,7 @@ class RenderContentViewHelper extends AbstractViewHelper {
    *
    * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
    */
-  public function initializeArguments() {
+  public function initializeArguments(): void {
     $this->registerArgument('uids', 'string', 'Content Uids', true);
   }
 
@@ -38,8 +38,6 @@ class RenderContentViewHelper extends AbstractViewHelper {
     $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
     if (version_compare($typo3Version->getVersion(), '11.5.0') >= 0) {
       /** @var RenderingContext $renderingContext */
-
-      /** @var RequestInterface $request */
       $request = $renderingContext->getRequest();
 
       /** @var TypoScriptFrontendController $frontendController */
