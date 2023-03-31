@@ -32,6 +32,9 @@ class RenderContentViewHelper extends AbstractViewHelper {
     $this->registerArgument('uids', 'string', 'Content Uids', true);
   }
 
+  /**
+   * @param array<string, mixed> $arguments
+   */
   public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
     $elements = '';
 
@@ -44,6 +47,9 @@ class RenderContentViewHelper extends AbstractViewHelper {
     } else {
       /** @var TypoScriptFrontendController $frontendController */
       $frontendController = $GLOBALS['TSFE'];
+    }
+    if (null === $frontendController) {
+      return '';
     }
 
     foreach (GeneralUtility::intExplode(',', strval($arguments['uids'] ?? '')) as $uid) {
