@@ -40,7 +40,6 @@ class RenderContentViewHelper extends AbstractViewHelper {
       /** @var RenderingContext $renderingContext */
       $request = $renderingContext->getRequest();
 
-      /** @var TypoScriptFrontendController $frontendController */
       $frontendController = $request->getAttribute('frontend.controller');
     } else {
       /** @var TypoScriptFrontendController $frontendController */
