@@ -24,7 +24,7 @@ $config['parameters']['ignoreErrors'][] = [
 $config['parameters']['ignoreErrors'][] = [
   'message' => '#Cannot call method fetchAll\(\) on Doctrine\\DBAL\\Result|int.#',
   'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
-  'count' => 1,
+  'count' => 2,
 ];
 
 $typo3Version = new Typo3Version();

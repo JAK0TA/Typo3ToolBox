@@ -26,9 +26,9 @@ class PipeToSpanViewHelper extends AbstractViewHelper {
   }
 
   public function render(): string {
-    $text = $this->arguments['text'];
-    $direction = $this->arguments['direction'];
-    $class = $this->arguments['class'];
+    $text = strval($this->arguments['text']);
+    $direction = strval($this->arguments['direction']);
+    $class = strval($this->arguments['class']);
 
     $pos = strpos($text, '|');
     if (false !== $pos) {
