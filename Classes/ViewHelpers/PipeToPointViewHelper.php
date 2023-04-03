@@ -24,7 +24,7 @@ class PipeToPointViewHelper extends AbstractViewHelper {
   }
 
   public function render(): string {
-    $text = $this->arguments['text'];
+    $text = strval($this->arguments['text']);
 
     return str_replace('|', '•', $text);
   }

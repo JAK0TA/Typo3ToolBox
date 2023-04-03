@@ -22,17 +22,17 @@ class FocusPointViewHelper extends AbstractViewHelper {
   }
 
   public function render(): float {
-    $crop = $this->arguments['crop'];
-    $cropVariant = $this->arguments['cropVariant'];
-    $type = $this->arguments['type'];
-    if (null == $crop) {
+    $crop = strval($this->arguments['crop'] ?? '');
+    $cropVariant = strval($this->arguments['cropVariant']);
+    $type = strval($this->arguments['type'] ?? '');
+    if (empty($crop)) {
       return 0;
     }
 
     $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
     if (version_compare($typo3Version->getVersion(), '11.5.0') >= 0) {
-      $cropVariantCollection = CropVariantCollection::create(strval($crop));
-      $focusArea = $cropVariantCollection->getFocusArea(strval($cropVariant));
+      $cropVariantCollection = CropVariantCollection::create($crop);
+      $focusArea = $cropVariantCollection->getFocusArea($cropVariant);
       $xCrop = $focusArea->getOffsetLeft();
       $yCrop = $focusArea->getOffsetTop();
       $height = $focusArea->getHeight();

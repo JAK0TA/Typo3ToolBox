@@ -15,6 +15,6 @@ class SanitizeNumberViewHelper extends AbstractViewHelper {
   public function render(): string {
     $regex = '/(?<!^)\+|[^\d+]+/';
 
-    return preg_replace($regex, '', $this->arguments['number']);
+    return preg_replace($regex, '', strval($this->arguments['number'])) ?? '';
   }
 }
