@@ -146,6 +146,7 @@ override(\TYPO3\CMS\Core\Http\ServerRequest::getAttribute(), map([
 override(\TYPO3\CMS\Extbase\Mvc\Request::getAttribute(), map([
   'backend.user' => \TYPO3\CMS\Backend\FrontendBackendUserAuthentication::class,
   'frontend.user' => \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication::class,
+  'frontend.controller' => \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class,
   'normalizedParams' => \TYPO3\CMS\Core\Http\NormalizedParams::class,
   'site' => \TYPO3\CMS\Core\Site\Entity\Site::class,
   'language' => \TYPO3\CMS\Core\Site\Entity\SiteLanguage::class,
