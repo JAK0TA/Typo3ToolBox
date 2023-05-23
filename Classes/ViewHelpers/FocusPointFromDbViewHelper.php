@@ -7,7 +7,6 @@ namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
 use JAKOTA\Typo3ToolBox\Utility\FocusPointUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -24,7 +23,7 @@ class FocusPointFromDbViewHelper extends AbstractViewHelper {
 
   public function render(): float {
     $uid = $this->arguments['uid'];
-    $cropVariant = $this->arguments['cropVariant'];
+    $cropVariant = strval($this->arguments['cropVariant'] ?? '');
     $type = strval($this->arguments['type'] ?? '');
 
     $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
@@ -46,21 +45,6 @@ class FocusPointFromDbViewHelper extends AbstractViewHelper {
       return 0.0;
     }
 
-    if (version_compare($typo3Version->getVersion(), '11.5.0') >= 0) {
-      $cropVariantCollection = CropVariantCollection::create(strval($crop));
-      $focusArea = $cropVariantCollection->getFocusArea(strval($cropVariant));
-      $xCrop = $focusArea->getOffsetLeft();
-      $yCrop = $focusArea->getOffsetTop();
-      $height = $focusArea->getHeight();
-      $width = $focusArea->getWidth();
-    } else {
-      $cropJson = (object) json_decode(strval($crop));
-      $xCrop = floatval($cropJson->{'$cropVariant'}->focusArea->x);
-      $yCrop = floatval($cropJson->{'$cropVariant'}->focusArea->y);
-      $height = floatval($cropJson->{'$cropVariant'}->focusArea->height);
-      $width = floatval($cropJson->{'$cropVariant'}->focusArea->width);
-    }
-
-    return FocusPointUtility::getFocusPoint($type, $xCrop, $yCrop, $height, $width);
+    return FocusPointUtility::getFocusPoint(strval($crop), $type, $cropVariant);
   }
 }
