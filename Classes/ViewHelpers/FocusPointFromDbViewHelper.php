@@ -25,7 +25,7 @@ class FocusPointFromDbViewHelper extends AbstractViewHelper {
   public function render(): float {
     $uid = $this->arguments['uid'];
     $cropVariant = $this->arguments['cropVariant'];
-    $type = $this->arguments['type'];
+    $type = strval($this->arguments['type'] ?? '');
 
     $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
     $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_file_reference');
