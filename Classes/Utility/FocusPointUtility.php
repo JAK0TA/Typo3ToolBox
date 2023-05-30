@@ -7,6 +7,7 @@ namespace JAKOTA\Typo3ToolBox\Utility;
 
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FocusPointUtility {
@@ -42,5 +43,13 @@ class FocusPointUtility {
     }
 
     return self::calculateFocusPoint($type, $xCrop, $yCrop, $height, $width);
+  }
+
+  public static function getFocusPointFromFile(FileInterface $fileObject, string $type, string $cropVariant = 'default'): float {
+    if (!$fileObject->hasProperty('crop') || empty($fileObject->getProperty('crop'))) {
+      return 0.0;
+    }
+
+    return self::getFocusPoint($fileObject->getProperty('crop'), $type, $cropVariant);
   }
 }
