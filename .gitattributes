@@ -1,0 +1,7 @@
+/.github/ export-ignore
+/.vscode/ export-ignore
+/PHPStan/ export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.phpstorm.meta.php export-ignore
+/phpstan.neon export-ignore
