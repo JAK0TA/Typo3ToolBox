@@ -17,7 +17,7 @@ class WordStatsViewHelper extends AbstractViewHelper {
   public function initializeArguments(): void {
     parent::initializeArguments();
     $this->registerArgument('as', 'string', 'name for Stats', false, '');
-    $this->registerArgument('returnStats', 'bool', 'Return stats array instead of rendered content', false, false);
+    $this->registerArgument('returnStatsAsArray', 'bool', 'Return stats array instead of rendered content', false, false);
   }
 
   /**
