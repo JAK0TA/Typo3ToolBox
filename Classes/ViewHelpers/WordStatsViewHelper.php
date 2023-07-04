@@ -16,15 +16,19 @@ class WordStatsViewHelper extends AbstractViewHelper {
    */
   public function initializeArguments(): void {
     parent::initializeArguments();
-    $this->registerArgument('as', 'string', 'name for Stats');
+    $this->registerArgument('as', 'string', 'name for Stats', false, '');
+    $this->registerArgument('returnStats', 'bool', 'Return stats array instead of rendered content', false, false);
   }
 
   /**
-   * @param array<string, string> $arguments
+   * @param array<string, bool|string> $arguments
+   *
+   * @return array|string
    */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
+  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
     $templateVariableContainer = $renderingContext->getVariableProvider();
     $as = $arguments['as'];
+    $returnContent = $arguments['returnContent'] ?? false;
     $templateVariableContainer->add($as, '');
     $output = $renderChildrenClosure();
     $templateVariableContainer->remove($as);
@@ -71,6 +75,9 @@ class WordStatsViewHelper extends AbstractViewHelper {
       } else {
         $stats->formatGood = round($min).' min';
       }
+    }
+    if ($returnContent) {
+      return (array) $stats;
     }
 
     $templateVariableContainer->add($as, $stats);
