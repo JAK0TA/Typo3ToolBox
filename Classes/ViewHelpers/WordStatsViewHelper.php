@@ -28,7 +28,7 @@ class WordStatsViewHelper extends AbstractViewHelper {
   public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
     $templateVariableContainer = $renderingContext->getVariableProvider();
     $as = $arguments['as'];
-    $returnContent = $arguments['returnContent'] ?? false;
+    $returnStatsAsArray = $arguments['returnStatsAsArray'] ?? false;
     $templateVariableContainer->add($as, '');
     $output = $renderChildrenClosure();
     $templateVariableContainer->remove($as);
@@ -76,7 +76,7 @@ class WordStatsViewHelper extends AbstractViewHelper {
         $stats->formatGood = round($min).' min';
       }
     }
-    if ($returnContent) {
+    if ($returnStatsAsArray) {
       return (array) $stats;
     }
 
