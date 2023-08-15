@@ -69,7 +69,7 @@ class WordStatsViewHelper extends AbstractViewHelper {
     if ($stats->secondsGood < 1) {
       $stats->formatGood = '0 sek';
     } else {
-      $min = $stats->formatGood / 60;
+      $min = $stats->secondsGood / 60;
       if ($min < 1) {
         $stats->formatGood = round($stats->secondsGood).' sek';
       } else {
