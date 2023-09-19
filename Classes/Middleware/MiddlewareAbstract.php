@@ -50,6 +50,10 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
    */
   protected $responseFactory;
 
+  public function __construct(ResponseFactoryInterface $responseFactory) {
+    $this->responseFactory = $responseFactory;
+  }
+
   public function checkRequest(string $path, callable $callable, string $method): void {
     if ($this->request->getMethod() == $method) {
       if ($this->isPathWithQuery($path) || $this->isPath($path) || $this->isRequestTarget($path)) {
