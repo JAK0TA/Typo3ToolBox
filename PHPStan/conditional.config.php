@@ -29,7 +29,7 @@ $config['parameters']['ignoreErrors'][] = [
 $config['parameters']['ignoreErrors'][] = [
   'message' => '#Cannot call method fetch\(\) on Doctrine\\DBAL\\Result|int.#',
   'path' => '../Classes/Utility/FlexFormUtility.php',
-  'count' => 2,
+  'count' => 1,
 ];
 
 $typo3Version = new Typo3Version();
