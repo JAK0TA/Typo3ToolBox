@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
+use JAKOTA\Typo3ToolBox\Utility\TextUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -16,61 +17,27 @@ class WordStatsViewHelper extends AbstractViewHelper {
    */
   public function initializeArguments(): void {
     parent::initializeArguments();
-    $this->registerArgument('as', 'string', 'name for Stats');
+    $this->registerArgument('as', 'string', 'name for Stats', false, '');
+    $this->registerArgument('returnStatsAsArray', 'bool', 'Return stats array instead of rendered content', false, false);
   }
 
   /**
-   * @param array<string, string> $arguments
+   * @param array<string, bool|string> $arguments
+   *
+   * @return array<string, mixed>|string
    */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
+  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
     $templateVariableContainer = $renderingContext->getVariableProvider();
-    $as = $arguments['as'];
+    $as = strval($arguments['as']);
+    $returnStatsAsArray = $arguments['returnStatsAsArray'] ?? false;
     $templateVariableContainer->add($as, '');
     $output = $renderChildrenClosure();
     $templateVariableContainer->remove($as);
 
-    $secondsPerWordBad = 0.55;
-    $secondsPerWordAverage = 0.25;
-    $secondsPerWordGood = 0.15;
+    $stats = TextUtility::calculateReadingTime($output);
 
-    $wordCount = str_word_count(strip_tags($output));
-    $stats = new \stdClass();
-    $stats->words = $wordCount;
-    $stats->secondsBad = $wordCount * $secondsPerWordBad;
-    $stats->secondsAverage = $wordCount * $secondsPerWordAverage;
-    $stats->secondsGood = $wordCount * $secondsPerWordGood;
-
-    if ($stats->secondsBad < 1) {
-      $stats->formatBad = '0 sek';
-    } else {
-      $min = $stats->secondsBad / 60;
-      if ($min < 1) {
-        $stats->formatBad = round($stats->secondsBad).' sek';
-      } else {
-        $stats->formatBad = round($min).' min';
-      }
-    }
-
-    if ($stats->secondsAverage < 1) {
-      $stats->formatAverage = '0 sek';
-    } else {
-      $min = $stats->secondsAverage / 60;
-      if ($min < 1) {
-        $stats->formatAverage = round($stats->secondsAverage).' sek';
-      } else {
-        $stats->formatAverage = round($min).' min';
-      }
-    }
-
-    if ($stats->secondsGood < 1) {
-      $stats->formatGood = '0 sek';
-    } else {
-      $min = $stats->formatGood / 60;
-      if ($min < 1) {
-        $stats->formatGood = round($stats->secondsGood).' sek';
-      } else {
-        $stats->formatGood = round($min).' min';
-      }
+    if ($returnStatsAsArray) {
+      return (array) $stats;
     }
 
     $templateVariableContainer->add($as, $stats);
