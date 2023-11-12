@@ -26,6 +26,11 @@ $config['parameters']['ignoreErrors'][] = [
   'path' => '../Classes/ViewHelpers/FocusPointFromDbViewHelper.php',
   'count' => 3,
 ];
+$config['parameters']['ignoreErrors'][] = [
+  'message' => '#Cannot call method fetch\(\) on Doctrine\\DBAL\\Result|int.#',
+  'path' => '../Classes/Utility/FlexFormUtility.php',
+  'count' => 2,
+];
 
 $typo3Version = new Typo3Version();
 if (version_compare($typo3Version->getVersion(), '11.5.0', '<')) {
