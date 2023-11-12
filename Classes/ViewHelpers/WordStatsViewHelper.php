@@ -24,11 +24,11 @@ class WordStatsViewHelper extends AbstractViewHelper {
   /**
    * @param array<string, bool|string> $arguments
    *
-   * @return array|string
+   * @return array<string, mixed>|string
    */
   public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
     $templateVariableContainer = $renderingContext->getVariableProvider();
-    $as = $arguments['as'];
+    $as = strval($arguments['as']);
     $returnStatsAsArray = $arguments['returnStatsAsArray'] ?? false;
     $templateVariableContainer->add($as, '');
     $output = $renderChildrenClosure();
