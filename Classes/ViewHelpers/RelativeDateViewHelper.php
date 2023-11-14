@@ -15,15 +15,22 @@ class RelativeDateViewHelper extends AbstractViewHelper {
   public function initializeArguments(): void {
     parent::initializeArguments();
     $this->registerArgument('value', 'DateTime', 'datetime to format');
+    $this->registerArgument('timestamp', 'int', 'timestamp');
   }
 
   /**
    * @return null|string
    */
   public function render() {
-    /** @var \DateTime $date */
+    /** @var ?\DateTime $date */
     $date = $this->arguments['value'];
 
-    return DateUtility::calculateRelativeDate($date);
+    $timestamp = intval($this->arguments['timestamp'] ?? 0);
+
+    if ($date) {
+      $timestamp = $date->getTimestamp();
+    }
+
+    return DateUtility::calculateRelativeDate($timestamp);
   }
 }

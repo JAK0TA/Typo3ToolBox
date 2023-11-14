@@ -9,8 +9,7 @@ class DateUtility {
   /**
    * @return null|string
    */
-  public static function calculateRelativeDate(\DateTime $date) {
-    $timestamp = $date->getTimestamp();
+  public static function calculateRelativeDate(int $timestamp) {
     $currentTime = time();
 
     $strTime = ['Sekunde', 'Minute', 'Stunde', 'Tag', 'Monat', 'Jahr'];
