@@ -53,4 +53,25 @@ class TextUtility {
 
     return $stats;
   }
+
+  /**
+   * Trims a multiline string to a specified number of lines.
+   *
+   * This function takes a string and an optional line limit. It then trims the
+   * string so that it contains no more than the specified number of lines. If the
+   * string has fewer lines than the limit, it remains unchanged. The function ensures
+   * that the output always ends with a newline character.
+   *
+   * @param string $string the multiline string to be trimmed
+   * @param int    $lines  Optional. The maximum number of lines to keep in the string.
+   *                       Defaults to 100.
+   *
+   * @return string the trimmed string, containing no more than the specified number of lines
+   */
+  public static function keepLines(string $string, int $lines = 100): string {
+    $string = explode("\n", $string);
+    array_splice($string, $lines);
+
+    return implode("\n", $string)."\n";
+  }
 }
