@@ -11,7 +11,7 @@ class DateUtility {
   /**
    * @return string
    */
-  public static function formatDate(int|string $date, string $pattern = 'MM/dd/yyyy', Locale $locale = new Locale()) {
+  public static function formatDate(int|string $date, string $pattern = 'MM/DD/YYYY', Locale $locale = new Locale()) {
     $formatter = new \IntlDateFormatter(
       $locale->__toString(),
       \IntlDateFormatter::NONE,
