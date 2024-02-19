@@ -39,12 +39,6 @@ class FormatDateViewHelper extends AbstractViewHelper {
       $date = trim($date);
     }
 
-    // Convert old php dateformat pattern to IntlDateFormatter
-    $pattern = str_replace('d', 'dd', $pattern);
-    $pattern = str_replace('M', 'MMM', $pattern);
-    $pattern = str_replace('m', 'MM', $pattern);
-    $pattern = str_replace('Y', 'YYYY', $pattern);
-
     return DateUtility::formatDate($date, $pattern, $locale);
   }
 }
