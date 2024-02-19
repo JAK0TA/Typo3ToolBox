@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Middleware;
 
+use JAKOTA\Typo3ToolBox\Definition\ContentTypeDefinition;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -64,7 +65,7 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
     }
   }
 
-  public function createResponse(string $string, bool $jsonOutput = true): ResponseInterface {
+  public function createResponse(string $string, string $contentType = ContentTypeDefinition::DEFAULT): ResponseInterface {
     $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
     if (version_compare($typo3Version->getVersion(), '10.1.0') >= 0) {
       $response = $this->responseFactory->createResponse();
@@ -72,8 +73,17 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
       $response = new Response();
     }
 
-    if ($jsonOutput) {
-      $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
+    switch ($contentType) {
+      case ContentTypeDefinition::JSON:
+        $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
+        break;
+
+      case ContentTypeDefinition::XML:
+        $response = $response->withHeader('Content-Type', 'application/xml; charset=utf-8');
+        break;
+
+      default:
+        break;
     }
 
     $response->getBody()->write($string);
