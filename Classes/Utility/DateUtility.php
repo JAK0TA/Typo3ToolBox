@@ -5,7 +5,24 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Utility;
 
+use TYPO3\CMS\Core\Localization\Locale;
+
 class DateUtility {
+  /**
+   * @return string
+   */
+  public static function formatDate(int|string $date, string $pattern = 'MM/DD/YYYY', Locale $locale = new Locale()) {
+    $formatter = new \IntlDateFormatter(
+      $locale->__toString(),
+      \IntlDateFormatter::NONE,
+      \IntlDateFormatter::NONE,
+    );
+
+    $formatter->setPattern($pattern);
+
+    return $formatter->format($date) ?: '';
+  }
+
   /**
    * @return null|string
    */
