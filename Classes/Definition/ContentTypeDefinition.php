@@ -10,5 +10,7 @@ class ContentTypeDefinition {
 
   public const JSON = 'json';
 
+  public const TEXT = 'text';
+
   public const XML = 'xml';
 }
