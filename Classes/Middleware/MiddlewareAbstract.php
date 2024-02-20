@@ -74,6 +74,7 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
     }
 
     switch ($contentType) {
+      case ContentTypeDefinition::DEFAULT:
       case ContentTypeDefinition::JSON:
         $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
         break;
