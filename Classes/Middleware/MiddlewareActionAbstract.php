@@ -17,7 +17,7 @@ use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 
 abstract class MiddlewareActionAbstract {
-  protected LanguageService $languageService = null;
+  protected ?LanguageService $languageService = null;
 
   protected LanguageServiceFactory $languageServiceFactory;
 
@@ -33,9 +33,9 @@ abstract class MiddlewareActionAbstract {
 
   protected ServerRequestInterface $request;
 
-  protected Site $site;
+  protected ?Site $site;
 
-  protected SiteLanguage $siteLanguage;
+  protected ?SiteLanguage $siteLanguage;
 
   protected UriBuilder $uriBuilder;
 
@@ -52,24 +52,29 @@ abstract class MiddlewareActionAbstract {
 
     $langId = $this->queryParams['L'] ?? false;
     if (false != $langId) {
-      $this->siteLanguage = $this->site->getLanguageById(intval($langId));
+      $this->siteLanguage = $this->site?->getLanguageById(intval($langId));
     } else {
       $this->siteLanguage = $this->request->getAttribute('language');
     }
 
     $this->languageServiceFactory = GeneralUtility::makeInstance(LanguageServiceFactory::class);
-    $this->languageService = $this->languageServiceFactory->createFromSiteLanguage($this->siteLanguage);
-    $GLOBALS['LANG'] = $this->languageService;
+    $this->uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
 
     // Set LanguageAspect for exbase
     $context = GeneralUtility::makeInstance(Context::class);
-    $context->setAspect('language', new LanguageAspect($this->siteLanguage->getLanguageId()));
+    $context->setAspect('language', new LanguageAspect($this->siteLanguage?->getLanguageId() ?? 0));
 
-    $this->uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+    if (null !== $this->siteLanguage) {
+      $this->languageService = $this->languageServiceFactory->createFromSiteLanguage($this->siteLanguage);
+      $GLOBALS['LANG'] = $this->languageService;
+    }
   }
 
   protected function getAbsPath(?FileReference $file): string {
     if (null == $file) {
+      return '';
+    }
+    if (null == $this->siteLanguage) {
       return '';
     }
 
@@ -77,6 +82,10 @@ abstract class MiddlewareActionAbstract {
   }
 
   protected function getLocalizationFromKey(string $keyToTranslate, string $filePath): string {
+    if (null === $this->siteLanguage || null === $this->languageService) {
+      return $keyToTranslate;
+    }
+
     $translatedString = $this->languageService->sL('LLL:'.$filePath.':'.$keyToTranslate);
 
     if (!empty($translatedString)) {
