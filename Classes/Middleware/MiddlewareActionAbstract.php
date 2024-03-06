@@ -53,6 +53,7 @@ abstract class MiddlewareActionAbstract {
     $langId = $this->queryParams['L'] ?? false;
     if (false != $langId) {
       $this->siteLanguage = $this->site?->getLanguageById(intval($langId));
+      $this->request = $this->request->withAttribute('language', $this->siteLanguage);
     } else {
       $this->siteLanguage = $this->request->getAttribute('language');
     }
