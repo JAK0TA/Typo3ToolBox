@@ -8,6 +8,7 @@ namespace JAKOTA\Typo3ToolBox\Middleware;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
+use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -15,6 +16,7 @@ use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
 abstract class MiddlewareActionAbstract {
   protected ?LanguageService $languageService = null;
@@ -61,9 +63,13 @@ abstract class MiddlewareActionAbstract {
     $this->languageServiceFactory = GeneralUtility::makeInstance(LanguageServiceFactory::class);
     $this->uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
 
-    // Set LanguageAspect for exbase
+    // Set LanguageAspect
     $context = GeneralUtility::makeInstance(Context::class);
     $context->setAspect('language', new LanguageAspect($this->siteLanguage?->getLanguageId() ?? 0));
+
+    // Set UserAspect
+    $frontendUser = $this->request->getAttribute('frontend.user', GeneralUtility::makeInstance(FrontendUserAuthentication::class));
+    $context->setAspect('frontend.user', new UserAspect($frontendUser));
 
     if (null !== $this->siteLanguage) {
       $this->languageService = $this->languageServiceFactory->createFromSiteLanguage($this->siteLanguage);
