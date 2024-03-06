@@ -11,12 +11,15 @@ use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Routing\PageArguments;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
+use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 abstract class MiddlewareActionAbstract {
   protected ?LanguageService $languageService = null;
@@ -74,6 +77,28 @@ abstract class MiddlewareActionAbstract {
     if (null !== $this->siteLanguage) {
       $this->languageService = $this->languageServiceFactory->createFromSiteLanguage($this->siteLanguage);
       $GLOBALS['LANG'] = $this->languageService;
+
+      if (!isset($GLOBALS['TSFE'])) {
+        $parsedBody = (array) $this->request->getParsedBody();
+
+        $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
+          TypoScriptFrontendController::class,
+          $context,
+          $this->site,
+          $this->siteLanguage,
+          new PageArguments(
+            intval($this->queryParams['id'] ?? $parsedBody['id'] ?? $this->site->getRootPageId()),
+            strval($this->queryParams['type'] ?? $parsedBody['type'] ?? ''),
+            [],
+            $this->queryParams
+          ),
+          $frontendUser,
+        );
+        $GLOBALS['TSFE']->tmpl = GeneralUtility::makeInstance(TemplateService::class);
+        $GLOBALS['TSFE']->determineId($this->request);
+        $GLOBALS['TSFE']->getConfigArray();
+        $GLOBALS['TSFE']->newCObj($this->request);
+      }
     }
   }
 
