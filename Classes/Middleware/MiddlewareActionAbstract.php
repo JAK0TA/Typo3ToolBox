@@ -64,7 +64,6 @@ abstract class MiddlewareActionAbstract {
     }
 
     $this->languageServiceFactory = GeneralUtility::makeInstance(LanguageServiceFactory::class);
-    $this->uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
 
     // Set LanguageAspect
     $context = GeneralUtility::makeInstance(Context::class);
@@ -100,6 +99,8 @@ abstract class MiddlewareActionAbstract {
         $GLOBALS['TSFE']->newCObj($this->request);
       }
     }
+
+    $this->uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
   }
 
   protected function getAbsPath(?FileReference $file): string {
