@@ -86,7 +86,7 @@ abstract class MiddlewareActionAbstract {
           $this->site,
           $this->siteLanguage,
           new PageArguments(
-            intval($this->queryParams['id'] ?? $parsedBody['id'] ?? $this->site->getRootPageId()),
+            intval($this->queryParams['id'] ?? $parsedBody['id'] ?? $this->site?->getRootPageId() ?? 0),
             strval($this->queryParams['type'] ?? $parsedBody['type'] ?? ''),
             [],
             $this->queryParams
