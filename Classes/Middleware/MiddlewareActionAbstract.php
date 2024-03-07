@@ -22,6 +22,8 @@ use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 abstract class MiddlewareActionAbstract {
+  protected string $languageFile = '';
+
   protected ?LanguageService $languageService = null;
 
   protected LanguageServiceFactory $languageServiceFactory;
@@ -114,12 +116,16 @@ abstract class MiddlewareActionAbstract {
     return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$file->getOriginalResource()->getPublicUrl();
   }
 
-  protected function getLocalizationFromKey(string $keyToTranslate, string $filePath): string {
-    if (null === $this->siteLanguage || null === $this->languageService) {
+  protected function getLocalizationFromKey(string $keyToTranslate, string $languageFile = ''): string {
+    if (empty($languageFile)) {
+      $languageFile = $this->languageFile;
+    }
+
+    if (null === $this->siteLanguage || null === $this->languageService || empty($languageFile)) {
       return $keyToTranslate;
     }
 
-    $translatedString = $this->languageService->sL('LLL:'.$filePath.':'.$keyToTranslate);
+    $translatedString = $this->languageService->sL('LLL:'.$languageFile.':'.$keyToTranslate);
 
     if (!empty($translatedString)) {
       return $translatedString;
