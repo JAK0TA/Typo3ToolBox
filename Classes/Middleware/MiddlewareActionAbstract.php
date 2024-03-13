@@ -21,7 +21,7 @@ use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
-abstract class MiddlewareActionAbstract {
+abstract class MiddlewareActionAbstract extends ApiAbstract {
   protected string $languageFile = '';
 
   protected ?LanguageService $languageService = null;
