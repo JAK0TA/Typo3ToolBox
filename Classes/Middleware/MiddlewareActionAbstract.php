@@ -38,6 +38,11 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
    */
   protected array $queryParams = [];
 
+  /**
+   * @var array<mixed>|object
+   */
+  protected $requestBody = [];
+
   protected ServerRequestInterface $request;
 
   protected ?Site $site;
@@ -55,6 +60,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
     $this->request = $request;
     $this->pathParams = $pathParams;
     $this->queryParams = $this->request->getQueryParams();
+    $this->requestBody = $this->request->getParsedBody() ?? [];
     $this->site = $this->request->getAttribute('site');
 
     $langId = $this->queryParams['L'] ?? false;

@@ -5,14 +5,12 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Middleware;
 
-use InvalidArgumentException;
 use JAKOTA\Typo3ToolBox\Definition\ContentTypeDefinition;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use RuntimeException;
 use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -29,19 +27,9 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
   protected $pathParams = [];
 
   /**
-   * @var array<mixed>
-   */
-  protected $queryParams = [];
-
-  /**
    * @var ServerRequestInterface
    */
   protected $request;
-
-  /**
-   * @var array<mixed>|object
-   */
-  protected $requestBody = [];
 
   /**
    * @var ?ResponseInterface
@@ -60,9 +48,7 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
   public function checkRequest(string $path, callable $callable, string $method): void {
     if ($this->request->getMethod() == $method) {
       if ($this->isPathWithQuery($path) || $this->isPath($path) || $this->isRequestTarget($path)) {
-        $this->requestBody = $this->request->getParsedBody() ?? [];
-        $this->queryParams = $this->request->getQueryParams();
-        $this->response = $callable($this->queryParams, $this->pathParams[$path] ?? [], $this->requestBody);
+        $this->response = $callable($this->pathParams[$path] ?? []);
       }
     }
   }
