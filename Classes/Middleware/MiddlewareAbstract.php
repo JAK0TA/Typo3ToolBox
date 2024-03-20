@@ -45,6 +45,9 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
     $this->responseFactory = $responseFactory;
   }
 
+  /**
+   * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
+   */
   public function checkRequest(string $path, callable $callable, string $method): void {
     if ($this->request->getMethod() == $method) {
       if ($this->isPathWithQuery($path) || $this->isPath($path) || $this->isRequestTarget($path)) {
@@ -83,10 +86,16 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
     return $response;
   }
 
+  /**
+   * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
+   */
   public function delete(string $path, callable $callable): void {
     $this->checkRequest($path, $callable, 'DELETE');
   }
 
+  /**
+   * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
+   */
   public function get(string $path, callable $callable): void {
     $this->checkRequest($path, $callable, 'GET');
   }
@@ -104,10 +113,16 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
     $this->handler = $handler;
   }
 
+  /**
+   * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
+   */
   public function post(string $path, callable $callable): void {
     $this->checkRequest($path, $callable, 'POST');
   }
 
+  /**
+   * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
+   */
   public function put(string $path, callable $callable): void {
     $this->checkRequest($path, $callable, 'PUT');
   }
