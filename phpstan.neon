@@ -18,6 +18,7 @@ parameters:
 
   checkThisOnly: false
   checkPhpDocMissingReturn: false
+  checkMissingCallableSignature: true
   reportUnmatchedIgnoredErrors: true
   paths:
     - %currentWorkingDirectory%/Classes/
