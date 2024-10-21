@@ -38,12 +38,12 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
    */
   protected array $queryParams = [];
 
+  protected ServerRequestInterface $request;
+
   /**
    * @var array<mixed>|object
    */
   protected $requestBody = [];
-
-  protected ServerRequestInterface $request;
 
   protected ?Site $site;
 
@@ -60,8 +60,16 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
     $this->request = $request;
     $this->pathParams = $pathParams;
     $this->queryParams = $this->request->getQueryParams();
-    $this->requestBody = $this->request->getParsedBody() ?? [];
     $this->site = $this->request->getAttribute('site');
+
+    $contentType = $this->request->getHeaderLine('Content-Type');
+    if (false !== stripos($contentType, 'application/json')) {
+      /** @var null|array<string|int, mixed> $parsedBody */
+      $parsedBody = json_decode($this->request->getBody()->getContents(), true);
+      $this->requestBody = null !== $parsedBody ? $parsedBody : [];
+    } else {
+      $this->requestBody = $this->request->getParsedBody() ?? [];
+    }
 
     $langId = $this->queryParams['L'] ?? false;
     if (false != $langId) {
