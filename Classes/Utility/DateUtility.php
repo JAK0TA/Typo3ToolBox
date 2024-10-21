@@ -39,11 +39,13 @@ class DateUtility {
       }
       $diff = round($diff);
       $out = 'vor '.$diff.' '.$strTime[$i];
+      
+      // Add appropriate pluralization for German
       if ($diff > 1) {
-        if ('e' == $strTime[$i][-1]) {
-          $out = $out.'n';
+        if (substr($strTime[$i], -1) === 'e') {
+          $out .= 'n';
         } else {
-          $out = $out.'en';
+          $out .= 'en';
         }
       }
 
