@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Context\UserAspect;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Routing\PageArguments;
@@ -64,7 +65,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
 
     $contentType = $this->request->getHeaderLine('Content-Type');
     if (false !== stripos($contentType, 'application/json')) {
-      /** @var null|array<string|int, mixed> $parsedBody */
+      /** @var null|array<int|string, mixed> $parsedBody */
       $parsedBody = json_decode($this->request->getBody()->getContents(), true);
       $this->requestBody = null !== $parsedBody ? $parsedBody : [];
     } else {
@@ -92,7 +93,10 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
     if (null !== $this->siteLanguage) {
       $this->languageService = $this->languageServiceFactory->createFromSiteLanguage($this->siteLanguage);
       $GLOBALS['LANG'] = $this->languageService;
+    }
 
+    $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+    if (version_compare($typo3Version->getVersion(), '13.4.0') < 0) {
       if (!isset($GLOBALS['TSFE'])) {
         $parsedBody = (array) $this->request->getParsedBody();
 
@@ -109,6 +113,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
           ),
           $frontendUser,
         );
+
         $GLOBALS['TSFE']->tmpl = GeneralUtility::makeInstance(TemplateService::class);
         $GLOBALS['TSFE']->determineId($this->request);
         $GLOBALS['TSFE']->getConfigArray();
