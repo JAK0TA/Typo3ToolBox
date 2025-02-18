@@ -67,7 +67,7 @@ class FlexFormUtility {
     }
 
     if (is_array($sheetArray)) {
-      return self::getFlexFormValueFromSheetArray($sheetArray, \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode('/', $fieldName), $value);
+      return self::getFlexFormValueFromSheetArray($sheetArray, GeneralUtility::trimExplode('/', $fieldName), $value);
     }
 
     return null;
@@ -93,7 +93,11 @@ class FlexFormUtility {
           }
         }
       } else {
-        $tempArr = (array) ($tempArr[strval($v)] ?? []);
+        if (is_array($tempArr)) {
+          $tempArr = (array) ($tempArr[strval($v)] ?? []);
+        } else {
+          $tempArr = [];
+        }
       }
     }
 
