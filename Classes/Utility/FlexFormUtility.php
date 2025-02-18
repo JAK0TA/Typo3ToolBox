@@ -93,7 +93,11 @@ class FlexFormUtility {
           }
         }
       } else {
-        $tempArr = (array) ($tempArr[strval($v)] ?? []);
+        if (is_array($tempArr)) {
+          $tempArr = (array) ($tempArr[strval($v)] ?? []);
+        } else {
+          $tempArr = [];
+        }
       }
     }
 
