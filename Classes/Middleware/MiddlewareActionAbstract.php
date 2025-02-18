@@ -9,6 +9,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Context\UserAspect;
+use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Routing\PageArguments;
@@ -17,6 +18,7 @@ use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
+use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
@@ -146,5 +148,50 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
     }
 
     return $keyToTranslate;
+  }
+
+  public function resizeAndCropImage(?FileReference $image, string $width = '2480', string $height = '770', string $cropArea = 'default', bool $absUrl = false): ?string {
+    if (null == $image) {
+      return null;
+    }
+
+    if ('svg' == strtolower($image->getOriginalResource()->getExtension())) {
+      if ($absUrl) {
+        if (null == $this->siteLanguage) {
+          return '/'.$image->getOriginalResource()->getPublicUrl();
+        }
+
+        return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$image->getOriginalResource()->getPublicUrl();
+      }
+
+      return '/'.$image->getOriginalResource()->getPublicUrl();
+    }
+
+    $imageService = GeneralUtility::makeInstance(ImageService::class);
+    $getImage = $imageService->getImage('', $image, false);
+
+    $cropString = null;
+    if ($getImage->hasProperty('crop') && $getImage->getProperty('crop')) {
+      $cropString = $getImage->getProperty('crop');
+    }
+
+    $cropVariantCollection = CropVariantCollection::create(strval($cropString));
+    $cropArea = $cropVariantCollection->getCropArea($cropArea);
+
+    $processedImage = $imageService->applyProcessingInstructions($getImage, [
+      'width' => $width,
+      'height' => $height,
+      'crop' => $cropArea->isEmpty() ? null : $cropArea->makeAbsoluteBasedOnFile($getImage),
+    ]);
+
+    if ($absUrl) {
+      if (null == $this->siteLanguage) {
+        return '/'.$processedImage->getPublicUrl();
+      }
+
+      return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$processedImage->getPublicUrl();
+    }
+
+    return '/'.$processedImage->getPublicUrl();
   }
 }
