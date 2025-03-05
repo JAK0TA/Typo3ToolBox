@@ -55,9 +55,9 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
       }
     }
   }
+
   /**
-   *
-   * @param string $contentType Defaults to JSON content type if omitted.
+   * @param string $contentType defaults to JSON content type if omitted
    */
   public function createResponse(string $string, string $contentType = ContentTypeDefinition::DEFAULT): ResponseInterface {
     $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
@@ -71,10 +71,12 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
       case ContentTypeDefinition::DEFAULT:
       case ContentTypeDefinition::JSON:
         $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
+
         break;
 
       case ContentTypeDefinition::XML:
         $response = $response->withHeader('Content-Type', 'application/xml; charset=utf-8');
+
         break;
 
       default:
@@ -111,6 +113,13 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
   public function initMiddleware(ServerRequestInterface $request, RequestHandlerInterface $handler): void {
     $this->request = $request;
     $this->handler = $handler;
+  }
+
+  /**
+   * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
+   */
+  public function patch(string $path, callable $callable): void {
+    $this->checkRequest($path, $callable, 'PATCH');
   }
 
   /**
