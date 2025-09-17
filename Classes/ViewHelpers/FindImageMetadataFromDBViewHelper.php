@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -31,8 +32,8 @@ class FindImageMetadataFromDBViewHelper extends AbstractViewHelper {
     $queryBuilder = $queryBuilder
       ->select('*')
       ->from('sys_file_metadata')
-      ->where($queryBuilder->expr()->eq('sys_file_metadata.file', $queryBuilder->createNamedParameter($this->arguments['uid'], \PDO::PARAM_STR)))
-      ->andWhere($queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter($this->arguments['language'], \PDO::PARAM_STR)))
+      ->where($queryBuilder->expr()->eq('sys_file_metadata.file', $queryBuilder->createNamedParameter($this->arguments['uid'], Connection::PARAM_STR)))
+      ->andWhere($queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter($this->arguments['language'], Connection::PARAM_STR)))
     ;
 
     $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
