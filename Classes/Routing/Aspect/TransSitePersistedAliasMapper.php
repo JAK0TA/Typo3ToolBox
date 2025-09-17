@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Routing\Aspect;
 
-use Doctrine\DBAL\Connection;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Routing\Aspect\PersistedAliasMapper;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -21,7 +21,7 @@ class TransSitePersistedAliasMapper extends PersistedAliasMapper {
     $constraints = [
       $queryBuilder->expr()->eq(
         $this->routeFieldName,
-        $queryBuilder->createNamedParameter($value, \PDO::PARAM_STR)
+        $queryBuilder->createNamedParameter($value, Connection::PARAM_STR)
       ),
     ];
 
