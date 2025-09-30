@@ -151,7 +151,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
       ];
     }
 
-    return $this->site->getRouter()->generateUri($this->site->getAttribute('shipDetailPageUid'), $arguments);
+    return $this->site->getRouter()->generateUri($this->site->getAttribute('shipDetailPageUid'), $arguments ?? []);
   }
 
   protected function getAbsPath(?FileReference $file): string {
