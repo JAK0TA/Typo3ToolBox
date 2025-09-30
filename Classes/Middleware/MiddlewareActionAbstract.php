@@ -130,20 +130,20 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
   /**
    * Function to build urls without using $this->uriBuilder.
    *
-   * @param null|array<string, mixed>   $additionalGetParams  Additional GET parameters.
-   * @param null|string                 $extensionName        Extension name without underscores. Eg. 'myextension'
-   * @param null|string                 $pluginName           Plugin name with underscores. Eg. 'news_show' or 'records_list'
-   * @param null|string                 $actionName           Action name (the 'show' of 'news_show')
-   * @param null|string                 $controllerName       Name of the controller. Eg. 'News' or 'Record'
-   * @param null|array<string, mixed>   $actionArguments      Additional arguments needed for the Action. Eg. [newsId => 123, ...]
+   * @param array<string, mixed>  $additionalGetParams additional GET parameters
+   * @param null|string           $extensionName       Extension name without underscores. Eg. 'myextension'
+   * @param null|string           $pluginName          Plugin name with underscores. Eg. 'news_show' or 'records_list'
+   * @param null|string           $actionName          Action name (the 'show' of 'news_show')
+   * @param null|string           $controllerName      Name of the controller. Eg. 'News' or 'Record'
+   * @param array<string, mixed>  $actionArguments     Additional arguments needed for the Action. Eg. [newsId => 123, ...]
    */
-  protected function buildUri(int $pageId, ?array $additionalGetParams = [], ?string $extensionName = null, ?string $pluginName = null, ?string $actionName = null, ?string $controllerName = null, array $actionArguments = []): ?UriInterface {
+  protected function buildUri(int $pageId, array $additionalGetParams = [], ?string $extensionName = null, ?string $pluginName = null, ?string $actionName = null, ?string $controllerName = null, array $actionArguments = []): ?UriInterface {
     if (null === ($this->site?->getRouter() ?? null)) {
       return null;
     }
 
     $arguments = [
-      ...$additionalGetParams
+      ...$additionalGetParams,
     ];
 
     if (null !== $extensionName && null !== $pluginName && null !== $actionName && null !== $controllerName) {
