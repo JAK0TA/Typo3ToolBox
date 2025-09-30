@@ -151,7 +151,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
         strtolower("tx_{$extensionName}_{$pluginName}") => [
           'action' => $actionName,
           'controller' => $controllerName,
-          $actionArguments,
+          ...$actionArguments,
         ],
       ];
     }
