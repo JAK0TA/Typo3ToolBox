@@ -144,6 +144,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
 
     $arguments = [
       ...$additionalGetParams,
+      '_language' => $this->siteLanguage,
     ];
 
     if (null !== $extensionName && null !== $pluginName && null !== $actionName && null !== $controllerName) {
@@ -153,6 +154,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
           'controller' => $controllerName,
           ...$actionArguments,
         ],
+        '_language' => $this->siteLanguage,
       ];
     }
 
