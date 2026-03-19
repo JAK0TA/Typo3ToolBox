@@ -124,4 +124,13 @@ class FlexFormUtility {
 
     return $flexForm;
   }
+
+  /**
+   * Checks if a specific option is enabled.
+   * 
+   * @param int<0, 255> $bitmask
+   */
+  public static function isOptionEnabled(int $bitmask, int $index): bool {
+    return ($bitmask & (1 << $index)) !== 0;
+  }
 }
