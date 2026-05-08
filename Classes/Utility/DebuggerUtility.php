@@ -8,9 +8,7 @@ namespace JAKOTA\Typo3ToolBox\Utility;
 use Doctrine\SqlFormatter\SqlFormatter;
 use JAKOTA\Typo3ToolBox\SqlFormatter\CustomHtmlHighlighter;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\Query;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 
@@ -19,14 +17,8 @@ class DebuggerUtility extends \TYPO3\CMS\Extbase\Utility\DebuggerUtility {
    * @param Query|QueryBuilder $query
    */
   public static function debugQuery($query, string $title = 'SQL Debug'): void {
-    if ($query instanceof \TYPO3\CMS\Extbase\Persistence\Generic\Query) {
-      $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-      if (version_compare($typo3Version->getVersion(), '10.4.0') >= 0) {
-        $queryParser = GeneralUtility::makeInstance(Typo3DbQueryParser::class);
-      } else {
-        $ObjectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $queryParser = $ObjectManager->get(Typo3DbQueryParser::class);
-      }
+    if ($query instanceof Query) {
+      $queryParser = GeneralUtility::makeInstance(Typo3DbQueryParser::class);
 
       $query = $queryParser->convertQueryToDoctrineQueryBuilder($query);
     }

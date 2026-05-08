@@ -5,12 +5,11 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 class RenderContentViewHelper extends AbstractViewHelper {
@@ -26,7 +25,7 @@ class RenderContentViewHelper extends AbstractViewHelper {
   /**
    * Initialize arguments.
    *
-   * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
+   * @throws Exception
    */
   public function initializeArguments(): void {
     $this->registerArgument('uids', 'string', 'Content Uids', true);
@@ -38,16 +37,10 @@ class RenderContentViewHelper extends AbstractViewHelper {
   public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
     $elements = '';
 
-    $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-    if (version_compare($typo3Version->getVersion(), '11.5.0') >= 0) {
-      /** @var RenderingContext $renderingContext */
-      $request = $renderingContext->getRequest();
+    /** @var RenderingContext $renderingContext */
+    $request = $renderingContext->getRequest();
 
-      $frontendController = $request->getAttribute('frontend.controller');
-    } else {
-      /** @var TypoScriptFrontendController $frontendController */
-      $frontendController = $GLOBALS['TSFE'];
-    }
+    $frontendController = $request->getAttribute('frontend.controller');
     if (null === $frontendController) {
       return '';
     }

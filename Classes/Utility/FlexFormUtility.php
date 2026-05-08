@@ -10,7 +10,6 @@ use Doctrine\DBAL\Driver\Exception as DriverException;
 use Doctrine\DBAL\Exception;
 use TYPO3\CMS\Core\Cache\Exception\NoSuchCacheException;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -36,12 +35,7 @@ class FlexFormUtility {
       )
     ;
 
-    $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-    if (version_compare($typo3Version->getVersion(), '11.5.0') >= 0) {
-      $results = $queryBuilder->executeQuery()->fetchAssociative();
-    } else {
-      $results = $queryBuilder->execute()->fetch();
-    }
+    $results = $queryBuilder->executeQuery()->fetchAssociative();
 
     if (!$results) {
       return null;
@@ -105,6 +99,15 @@ class FlexFormUtility {
   }
 
   /**
+   * Checks if a specific option is enabled.
+   *
+   * @param int<0, 255> $bitmask
+   */
+  public static function isOptionEnabled(int $bitmask, int $index): bool {
+    return ($bitmask & (1 << $index)) !== 0;
+  }
+
+  /**
    * @param array<string, mixed> $flexForm
    *
    * @return array<string, mixed>
@@ -123,14 +126,5 @@ class FlexFormUtility {
     $flexForm['data'][$sheet]['lDEF'][$key]['vDEF'] = $value;
 
     return $flexForm;
-  }
-
-  /**
-   * Checks if a specific option is enabled.
-   * 
-   * @param int<0, 255> $bitmask
-   */
-  public static function isOptionEnabled(int $bitmask, int $index): bool {
-    return ($bitmask & (1 << $index)) !== 0;
   }
 }

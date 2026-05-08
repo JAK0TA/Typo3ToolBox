@@ -6,9 +6,7 @@ declare(strict_types=1);
 namespace JAKOTA\Typo3ToolBox\Utility;
 
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Resource\FileInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FocusPointUtility {
   public static function calculateFocusPoint(string $type, float $xCrop, float $yCrop, float $height, float $width): float {
@@ -25,22 +23,12 @@ class FocusPointUtility {
   }
 
   public static function getFocusPoint(string $croppingConfiguration, string $type, string $cropVariant = 'default'): float {
-    $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-
-    if (version_compare($typo3Version->getVersion(), '11.5.0') >= 0) {
-      $cropVariantCollection = CropVariantCollection::create($croppingConfiguration);
-      $focusArea = $cropVariantCollection->getFocusArea($cropVariant);
-      $xCrop = $focusArea->getOffsetLeft();
-      $yCrop = $focusArea->getOffsetTop();
-      $height = $focusArea->getHeight();
-      $width = $focusArea->getWidth();
-    } else {
-      $cropJson = (object) json_decode($croppingConfiguration);
-      $xCrop = floatval($cropJson->{$cropVariant}->focusArea->x);
-      $yCrop = floatval($cropJson->{$cropVariant}->focusArea->y);
-      $height = floatval($cropJson->{$cropVariant}->focusArea->height);
-      $width = floatval($cropJson->{$cropVariant}->focusArea->width);
-    }
+    $cropVariantCollection = CropVariantCollection::create($croppingConfiguration);
+    $focusArea = $cropVariantCollection->getFocusArea($cropVariant);
+    $xCrop = $focusArea->getOffsetLeft();
+    $yCrop = $focusArea->getOffsetTop();
+    $height = $focusArea->getHeight();
+    $width = $focusArea->getWidth();
 
     return self::calculateFocusPoint($type, $xCrop, $yCrop, $height, $width);
   }
