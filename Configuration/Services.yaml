@@ -9,5 +9,5 @@ services:
     exclude:
       - '../Classes/Domain/Model/*'
 
-  TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager:
+  JAKOTA\Typo3ToolBox\Utility\TypoScriptUtility:
     public: true
