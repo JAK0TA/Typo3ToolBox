@@ -24,7 +24,7 @@ class TypoScriptUtility {
     $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $site->getRootPageId())->get();
 
     $rootLineForSysTemplates = $rootLine;
-    if ($site instanceof Site && $site->isTypoScriptRoot()) {
+    if ($site->isTypoScriptRoot()) {
       $rootLineForSysTemplates = [];
       foreach ($rootLine as $index => $rootlinePage) {
         $rootLineForSysTemplates[$index] = $rootlinePage;
