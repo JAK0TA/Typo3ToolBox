@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Middleware;
 
+use JAKOTA\Typo3ToolBox\Utility\TypoScriptUtility;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Core\Context\Context;
@@ -13,12 +14,10 @@ use TYPO3\CMS\Core\Context\UserAspect;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Routing\PageRouter;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
-use TYPO3\CMS\Core\TypoScript\AST\Node\RootNode;
-use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Service\ImageService;
@@ -60,7 +59,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
    * @throws \InvalidArgumentException
    */
   public function __construct(ServerRequestInterface $request, $pathParams) {
-    $this->request = $request;
+    $this->request = GeneralUtility::makeInstance(TypoScriptUtility::class)->addTypoScriptSetupToRequest($request, $request->getAttribute('site'));
     $this->pathParams = $pathParams;
     $this->queryParams = $this->request->getQueryParams();
     $this->site = $this->request->getAttribute('site');
@@ -95,19 +94,6 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
     if (null !== $this->siteLanguage) {
       $this->languageService = $this->languageServiceFactory->createFromSiteLanguage($this->siteLanguage);
       $GLOBALS['LANG'] = $this->languageService;
-    }
-
-    $backendConfigurationManager = GeneralUtility::makeInstance(
-      BackendConfigurationManager::class
-    );
-
-    $typoScript = new FrontendTypoScript(GeneralUtility::makeInstance(RootNode::class), [], [], []);
-    $typoScript->setSetupArray($backendConfigurationManager->getTypoScriptSetup($this->request));
-
-    $frontendTypoScript = $this->request->getAttribute('frontend.typoscript');
-    if (null === $frontendTypoScript || !$frontendTypoScript->hasSetup()) {
-      $this->request = $this->request->withAttribute('frontend.typoscript', $typoScript);
-      $GLOBALS['TYPO3_REQUEST'] = $this->request;
     }
 
     $this->uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
@@ -168,7 +154,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
    * @param null|string          $controllerName      Name of the controller. Eg. 'News' or 'Record'
    * @param array<string, mixed> $actionArguments     Additional arguments needed for the Action. Eg. [newsId => 123, ...]
    */
-  protected function buildUri(int $pageId, array $additionalGetParams = [], ?string $extensionName = null, ?string $pluginName = null, ?string $actionName = null, ?string $controllerName = null, array $actionArguments = []): ?UriInterface {
+  protected function buildUri(int $pageId, array $additionalGetParams = [], ?string $extensionName = null, ?string $pluginName = null, ?string $actionName = null, ?string $controllerName = null, array $actionArguments = [], string $fragment = '', string $type = PageRouter::ABSOLUTE_URL): ?UriInterface {
     if (null === ($this->site?->getRouter() ?? null)) {
       return null;
     }
@@ -189,7 +175,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
       ];
     }
 
-    return $this->site->getRouter()->generateUri($pageId, $arguments);
+    return $this->site->getRouter()->generateUri($pageId, $arguments, $fragment, $type);
   }
 
   protected function getAbsPath(?FileReference $file): string {
