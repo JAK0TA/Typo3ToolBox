@@ -5,14 +5,14 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 
 class TableAlignViewHelper extends AbstractViewHelper {
   /**
    * Initialize arguments.
    *
-   * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
+   * @throws Exception
    */
   public function initializeArguments(): void {
     parent::initializeArguments();
@@ -21,11 +21,9 @@ class TableAlignViewHelper extends AbstractViewHelper {
 
   /**
    * Applies nl2br() on the specified value.
-   *
-   * @param array<string, string> $arguments
    */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
-    $value = $renderChildrenClosure();
+  public function render(): string {
+    $value = $this->renderChildren();
     $re = '/^\[([A-Z])\]/m';
 
     preg_match_all($re, $value, $matches, PREG_SET_ORDER, 0);

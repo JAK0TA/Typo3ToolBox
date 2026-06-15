@@ -7,14 +7,10 @@ namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 class RenderContentViewHelper extends AbstractViewHelper {
-  use CompileWithRenderStatic;
-
   /**
    * As this ViewHelper renders HTML, the output must not be escaped.
    *
@@ -31,10 +27,7 @@ class RenderContentViewHelper extends AbstractViewHelper {
     $this->registerArgument('uids', 'string', 'Content Uids', true);
   }
 
-  /**
-   * @param array<string, mixed> $arguments
-   */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
+  public function render(): string {
     $elements = '';
 
     /** @var RenderingContext $renderingContext */
@@ -45,7 +38,7 @@ class RenderContentViewHelper extends AbstractViewHelper {
       return '';
     }
 
-    foreach (GeneralUtility::intExplode(',', strval($arguments['uids'] ?? '')) as $uid) {
+    foreach (GeneralUtility::intExplode(',', strval($this->arguments['uids'] ?? '')) as $uid) {
       if (0 < ($frontendController->recordRegister['tt_content:'.$uid] ?? 0)) {
         continue;
       }

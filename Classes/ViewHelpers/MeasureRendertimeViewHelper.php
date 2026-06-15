@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class MeasureRendertimeViewHelper extends AbstractViewHelper {
@@ -23,12 +22,9 @@ class MeasureRendertimeViewHelper extends AbstractViewHelper {
     parent::initializeArguments();
   }
 
-  /**
-   * @param array<string, mixed> $arguments
-   */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
+  public function render(): string {
     $time_start = microtime(true);
-    $output = $renderChildrenClosure();
+    $output = $this->renderChildren();
     $time_end = microtime(true);
     $time = $time_end - $time_start;
 

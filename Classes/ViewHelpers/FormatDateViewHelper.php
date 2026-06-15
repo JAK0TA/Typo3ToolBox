@@ -7,8 +7,6 @@ namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
 use JAKOTA\Typo3ToolBox\Utility\DateUtility;
 use TYPO3\CMS\Core\Localization\Locale;
-use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class FormatDateViewHelper extends AbstractViewHelper {
@@ -16,14 +14,10 @@ class FormatDateViewHelper extends AbstractViewHelper {
     $this->registerArgument('pattern', 'string', 'The format pattern', false);
   }
 
-  /**
-   * @param array<string, mixed> $arguments
-   * @param RenderingContext     $renderingContext
-   */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
-    $pattern = strval($arguments['pattern']);
+  public function render(): string {
+    $pattern = strval($this->arguments['pattern']);
 
-    $date = $renderChildrenClosure();
+    $date = $this->renderChildren();
     if (null === $date) {
       return '';
     }
