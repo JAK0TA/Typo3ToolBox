@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
 use JAKOTA\Typo3ToolBox\Utility\TextUtility;
+use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class WordStatsViewHelper extends AbstractViewHelper {
@@ -24,7 +25,11 @@ class WordStatsViewHelper extends AbstractViewHelper {
    * @return array<string, mixed>|string
    */
   public function render() {
-    $templateVariableContainer = $renderingContext->getVariableProvider();
+    if (!$this->renderingContext instanceof RenderingContext) {
+      return $this->renderChildren();
+    }
+
+    $templateVariableContainer = $this->renderingContext->getVariableProvider();
     $as = strval($this->arguments['as']);
     $returnStatsAsArray = $this->arguments['returnStatsAsArray'] ?? false;
     $templateVariableContainer->add($as, '');

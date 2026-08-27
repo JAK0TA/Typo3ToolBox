@@ -30,8 +30,11 @@ class RenderContentViewHelper extends AbstractViewHelper {
   public function render(): string {
     $elements = '';
 
-    /** @var RenderingContext $renderingContext */
-    $request = $renderingContext->getRequest();
+    if (!$this->renderingContext instanceof RenderingContext) {
+      return '';
+    }
+
+    $request = $this->renderingContext->getRequest();
 
     $frontendController = $request->getAttribute('frontend.controller');
     if (null === $frontendController) {

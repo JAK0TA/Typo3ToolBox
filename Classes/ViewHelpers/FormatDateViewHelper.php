@@ -7,6 +7,7 @@ namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
 use JAKOTA\Typo3ToolBox\Utility\DateUtility;
 use TYPO3\CMS\Core\Localization\Locale;
+use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class FormatDateViewHelper extends AbstractViewHelper {
@@ -22,7 +23,11 @@ class FormatDateViewHelper extends AbstractViewHelper {
       return '';
     }
 
-    $siteLanguage = $renderingContext->getRequest()->getAttribute('language');
+    if (!$this->renderingContext instanceof RenderingContext) {
+      return '';
+    }
+
+    $siteLanguage = $this->renderingContext->getRequest()->getAttribute('language');
     if (null !== $siteLanguage) {
       $locale = new Locale($siteLanguage->getLocale());
     } else {
