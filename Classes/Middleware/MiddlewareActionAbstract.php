@@ -59,10 +59,10 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
    * @throws \InvalidArgumentException
    */
   public function __construct(ServerRequestInterface $request, $pathParams) {
-    $this->request = GeneralUtility::makeInstance(TypoScriptUtility::class)->addTypoScriptSetupToRequest($request, $request->getAttribute('site'));
+    $this->site = $this->request->getAttribute('site') ?? new Site('', 0, []);
+    $this->request = GeneralUtility::makeInstance(TypoScriptUtility::class)->addTypoScriptSetupToRequest($request, $this->site);
     $this->pathParams = $pathParams;
     $this->queryParams = $this->request->getQueryParams();
-    $this->site = $this->request->getAttribute('site');
 
     $contentType = $this->request->getHeaderLine('Content-Type');
     if (false !== stripos($contentType, 'application/json')) {
@@ -75,7 +75,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
 
     $langId = $this->queryParams['L'] ?? false;
     if (false != $langId) {
-      $this->siteLanguage = $this->site?->getLanguageById(intval($langId));
+      $this->siteLanguage = $this->site->getLanguageById(intval($langId));
       $this->request = $this->request->withAttribute('language', $this->siteLanguage);
     } else {
       $this->siteLanguage = $this->request->getAttribute('language');

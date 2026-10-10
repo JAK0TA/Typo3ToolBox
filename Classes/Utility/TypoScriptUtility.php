@@ -11,11 +11,9 @@ use TYPO3\CMS\Core\TypoScript\FrontendTypoScriptFactory;
 use TYPO3\CMS\Core\TypoScript\IncludeTree\SysTemplateRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
-use TYPO3\CMS\Extbase\Configuration\BackendConfigurationManager;
 
 class TypoScriptUtility {
   public function __construct(
-    private BackendConfigurationManager $backendConfigurationManager,
     private FrontendTypoScriptFactory $frontendTypoScriptFactory,
     private SysTemplateRepository $sysTemplateRepository
   ) {}

@@ -38,6 +38,6 @@ class FocusPointUtility {
       return 0.0;
     }
 
-    return self::getFocusPoint($fileObject->getProperty('crop'), $type, $cropVariant);
+    return self::getFocusPoint(strval($fileObject->getProperty('crop')), $type, $cropVariant);
   }
 }

@@ -23,7 +23,7 @@ class TableAlignViewHelper extends AbstractViewHelper {
    * Applies nl2br() on the specified value.
    */
   public function render(): string {
-    $value = $this->renderChildren();
+    $value = strval($this->renderChildren());
     $re = '/^\[([A-Z])\]/m';
 
     preg_match_all($re, $value, $matches, PREG_SET_ORDER, 0);
@@ -47,6 +47,6 @@ class TableAlignViewHelper extends AbstractViewHelper {
       }
     }
 
-    return $value;
+    return $value ?? '';
   }
 }

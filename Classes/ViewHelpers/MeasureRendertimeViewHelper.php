@@ -24,7 +24,7 @@ class MeasureRendertimeViewHelper extends AbstractViewHelper {
 
   public function render(): string {
     $time_start = microtime(true);
-    $output = $this->renderChildren();
+    $output = strval($this->renderChildren());
     $time_end = microtime(true);
     $time = $time_end - $time_start;
 

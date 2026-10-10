@@ -5,8 +5,11 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 
@@ -34,34 +37,30 @@ class RenderContentViewHelper extends AbstractViewHelper {
       return '';
     }
 
-    $request = $this->renderingContext->getRequest();
+    $request = $this->renderingContext->getAttribute(ServerRequestInterface::class);
 
-    $frontendController = $request->getAttribute('frontend.controller');
-    if (null === $frontendController) {
-      return '';
+    /** @var null|ContentObjectRenderer $contentObject */
+    $contentObject = $request->getAttribute('currentContentObject');
+
+    if (null === $contentObject && version_compare(VersionNumberUtility::getCurrentTypo3Version(), '14', '<')) {
+      $frontendController = $request->getAttribute('frontend.controller');
+      // @phpstan-ignore-next-line
+      $contentObject = $frontendController?->cObj ?? null;
+    }
+
+    if (!$contentObject) {
+      /** @var ContentObjectRenderer $contentObject */
+      $contentObject = GeneralUtility::makeInstance(ContentObjectRenderer::class);
     }
 
     foreach (GeneralUtility::intExplode(',', strval($this->arguments['uids'] ?? '')) as $uid) {
-      if (0 < ($frontendController->recordRegister['tt_content:'.$uid] ?? 0)) {
-        continue;
-      }
       $conf = [
         'tables' => 'tt_content',
         'source' => $uid,
         'dontCheckPid' => 1,
       ];
-      $parent = $frontendController->currentRecord;
-      // If the currentRecord is set, we register, that this record has invoked this function.
-      // It's should not be allowed to do this again then!!
-      if (!empty($parent) && isset($frontendController->recordRegister[$parent])) {
-        ++$frontendController->recordRegister[$parent];
-      }
-      $html = $frontendController->cObj->cObjGetSingle('RECORDS', $conf);
 
-      $frontendController->currentRecord = $parent;
-      if (!empty($parent) && isset($frontendController->recordRegister[$parent])) {
-        --$frontendController->recordRegister[$parent];
-      }
+      $html = $contentObject->cObjGetSingle('RECORDS', $conf);
 
       $elements .= $html;
     }

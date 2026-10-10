@@ -25,15 +25,19 @@ class ContainerContentFlexformProcessor implements DataProcessorInterface {
     array $processorConfiguration,
     array $processedData
   ): array {
-    if (empty($processorConfiguration['content'] ?? '') || !isset($processedData[$processorConfiguration['content']]) || !is_array($processedData[$processorConfiguration['content']])) {
+    if (empty($processorConfiguration['content'] ?? '')) {
+      return $processedData;
+    }
+    $configuration = strval($processorConfiguration['content']);
+    if (!isset($processedData[$configuration]) || !is_array($processedData[$configuration])) {
       return $processedData;
     }
 
     $flexFormService = GeneralUtility::makeInstance(FlexFormService::class);
 
-    foreach ($processedData[$processorConfiguration['content']] as &$content) {
-      if (isset($content['pi_flexform'])) {
-        $content[$processorConfiguration['as'] ?? 'flexform'] = $flexFormService->convertFlexFormContentToArray($content['pi_flexform']);
+    foreach ($processedData[$configuration] as &$content) {
+      if (is_array($content) && isset($content['pi_flexform'])) {
+        $content[strval($processorConfiguration['as'] ?? 'flexform')] = $flexFormService->convertFlexFormContentToArray(strval($content['pi_flexform']));
       }
     }
 

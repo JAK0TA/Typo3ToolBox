@@ -24,8 +24,11 @@ class TimeViewHelper extends AbstractViewHelper {
   public function render(): string {
     $format = $this->arguments['format'];
     if ('' === $format) {
+      // @phpstan-ignore-next-line
       $format = $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] ?: 'Y-m-d';
     }
+
+    $format = strval($format);
 
     /** @var \Datetime */
     $date = $this->renderChildren();

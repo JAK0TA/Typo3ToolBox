@@ -21,10 +21,7 @@ class WordStatsViewHelper extends AbstractViewHelper {
     $this->registerArgument('returnStatsAsArray', 'bool', 'Return stats array instead of rendered content', false, false);
   }
 
-  /**
-   * @return array<string, mixed>|string
-   */
-  public function render() {
+  public function render(): mixed {
     if (!$this->renderingContext instanceof RenderingContext) {
       return $this->renderChildren();
     }
@@ -36,7 +33,7 @@ class WordStatsViewHelper extends AbstractViewHelper {
     $output = $this->renderChildren();
     $templateVariableContainer->remove($as);
 
-    $stats = TextUtility::calculateReadingTime($output);
+    $stats = TextUtility::calculateReadingTime(strval($output));
 
     if ($returnStatsAsArray) {
       return (array) $stats;

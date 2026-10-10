@@ -9,12 +9,15 @@ use Doctrine\SqlFormatter\SqlFormatter;
 use JAKOTA\Typo3ToolBox\SqlFormatter\CustomHtmlHighlighter;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Query;
 use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 
 class DebuggerUtility extends \TYPO3\CMS\Extbase\Utility\DebuggerUtility {
   /**
-   * @param Query|QueryBuilder $query
+   * @template T of DomainObjectInterface
+   *
+   * @param Query<T>|QueryBuilder $query
    */
   public static function debugQuery($query, string $title = 'SQL Debug'): void {
     if ($query instanceof Query) {
@@ -30,7 +33,7 @@ class DebuggerUtility extends \TYPO3\CMS\Extbase\Utility\DebuggerUtility {
   }
 
   /**
-   * @param string[] $params
+   * @param array<int<0, max>|string, mixed> $params
    */
   private static function renderDebug(string $sql, array $params, string $title): void {
     $sql = self::replaceParameters($sql, $params);
@@ -61,20 +64,28 @@ class DebuggerUtility extends \TYPO3\CMS\Extbase\Utility\DebuggerUtility {
   }
 
   /**
-   * @param array<string, array<float|int|string>|int|string> $dcValues
+   * param array<int<0, max>|string, array<float|int|string>|int|string> $dcValues.
+   *
+   * @param array<int<0, max>|string, mixed> $dcValues
    */
   private static function replaceParameters(string $sql, array $dcValues): string {
     $dcValuesFull = [];
     foreach ($dcValues as $k => $v) {
       if (is_array($v)) {
+        $value = '';
         foreach ($v as &$n) {
           if (!is_numeric($n)) {
-            $n = "'".addslashes($n)."'";
+            $value .= "'".addslashes(strval($n))."',";
+          } else {
+            $value .= strval($n).',';
           }
         }
-        $v = implode(',', $v);
+
+        $v = substr($value, 0, -1);
       } elseif (!is_numeric($v)) {
-        $v = "'".addslashes($v)."'";
+        $v = "'".addslashes(strval($v))."'";
+      } else {
+        $v = strval($v);
       }
       $dcValuesFull[":{$k}"] = $v;
     }
