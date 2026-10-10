@@ -21,7 +21,7 @@ class StartWithViewHelper extends AbstractConditionViewHelper {
   /**
    * @param array<string, mixed> $arguments
    */
-  protected static function evaluateCondition($arguments = null) {
+  protected static function evaluateCondition($arguments = null): bool {
     $haystack = strval($arguments['haystack'] ?? '');
     $needle = strval($arguments['needle'] ?? '');
 

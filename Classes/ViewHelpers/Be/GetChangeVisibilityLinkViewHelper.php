@@ -5,15 +5,12 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\ViewHelpers\Be;
 
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 class GetChangeVisibilityLinkViewHelper extends AbstractViewHelper {
-  use CompileWithRenderStatic;
-
   /**
    * Initializes the arguments.
    */
@@ -26,16 +23,14 @@ class GetChangeVisibilityLinkViewHelper extends AbstractViewHelper {
   /**
    * Render link.
    *
-   * @param array<string, mixed> $arguments
-   *
-   * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+   * @throws RouteNotFoundException
    */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
+  public function render(): string {
     $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-    $uid = strval($arguments['uid']);
-    $tableName = strval($arguments['tablename']);
+    $uid = strval($this->arguments['uid']);
+    $tableName = strval($this->arguments['tablename']);
 
-    switch ($arguments['command']) {
+    switch ($this->arguments['command']) {
       case 'unhide':
         $urlParameters = [
           'data['.$tableName.']['.$uid.'][disabled]' => 0,

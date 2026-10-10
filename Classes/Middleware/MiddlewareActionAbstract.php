@@ -5,25 +5,23 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Middleware;
 
+use JAKOTA\Typo3ToolBox\Utility\TypoScriptUtility;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Context\UserAspect;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
-use TYPO3\CMS\Core\Routing\PageArguments;
+use TYPO3\CMS\Core\Routing\PageRouter;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
-use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
-use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 abstract class MiddlewareActionAbstract extends ApiAbstract {
   protected string $languageFile = '';
@@ -61,10 +59,10 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
    * @throws \InvalidArgumentException
    */
   public function __construct(ServerRequestInterface $request, $pathParams) {
-    $this->request = $request;
+    $this->site = $this->request->getAttribute('site') ?? new Site('', 0, []);
+    $this->request = GeneralUtility::makeInstance(TypoScriptUtility::class)->addTypoScriptSetupToRequest($request, $this->site);
     $this->pathParams = $pathParams;
     $this->queryParams = $this->request->getQueryParams();
-    $this->site = $this->request->getAttribute('site');
 
     $contentType = $this->request->getHeaderLine('Content-Type');
     if (false !== stripos($contentType, 'application/json')) {
@@ -77,7 +75,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
 
     $langId = $this->queryParams['L'] ?? false;
     if (false != $langId) {
-      $this->siteLanguage = $this->site?->getLanguageById(intval($langId));
+      $this->siteLanguage = $this->site->getLanguageById(intval($langId));
       $this->request = $this->request->withAttribute('language', $this->siteLanguage);
     } else {
       $this->siteLanguage = $this->request->getAttribute('language');
@@ -98,96 +96,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
       $GLOBALS['LANG'] = $this->languageService;
     }
 
-    $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-    if (version_compare($typo3Version->getVersion(), '13.4.0') < 0) {
-      if (!isset($GLOBALS['TSFE'])) {
-        $parsedBody = (array) $this->request->getParsedBody();
-
-        $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
-          TypoScriptFrontendController::class,
-          $context,
-          $this->site,
-          $this->siteLanguage,
-          new PageArguments(
-            intval($this->queryParams['id'] ?? $parsedBody['id'] ?? $this->site?->getRootPageId() ?? 0),
-            strval($this->queryParams['type'] ?? $parsedBody['type'] ?? ''),
-            [],
-            $this->queryParams
-          ),
-          $frontendUser,
-        );
-
-        $GLOBALS['TSFE']->tmpl = GeneralUtility::makeInstance(TemplateService::class);
-        $GLOBALS['TSFE']->determineId($this->request);
-        $GLOBALS['TSFE']->getConfigArray();
-        $GLOBALS['TSFE']->newCObj($this->request);
-      }
-    }
-
     $this->uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-  }
-
-  /**
-   * Function to build urls without using $this->uriBuilder.
-   *
-   * @param array<string, mixed>  $additionalGetParams additional GET parameters
-   * @param null|string           $extensionName       Extension name without underscores. Eg. 'myextension'
-   * @param null|string           $pluginName          Plugin name with underscores. Eg. 'news_show' or 'records_list'
-   * @param null|string           $actionName          Action name (the 'show' of 'news_show')
-   * @param null|string           $controllerName      Name of the controller. Eg. 'News' or 'Record'
-   * @param array<string, mixed>  $actionArguments     Additional arguments needed for the Action. Eg. [newsId => 123, ...]
-   */
-  protected function buildUri(int $pageId, array $additionalGetParams = [], ?string $extensionName = null, ?string $pluginName = null, ?string $actionName = null, ?string $controllerName = null, array $actionArguments = []): ?UriInterface {
-    if (null === ($this->site?->getRouter() ?? null)) {
-      return null;
-    }
-
-    $arguments = [
-      ...$additionalGetParams,
-      '_language' => $this->siteLanguage,
-    ];
-
-    if (null !== $extensionName && null !== $pluginName && null !== $actionName && null !== $controllerName) {
-      $arguments = [
-        strtolower("tx_{$extensionName}_{$pluginName}") => [
-          'action' => $actionName,
-          'controller' => $controllerName,
-          ...$actionArguments,
-        ],
-        '_language' => $this->siteLanguage,
-      ];
-    }
-
-    return $this->site->getRouter()->generateUri($pageId, $arguments);
-  }
-
-  protected function getAbsPath(?FileReference $file): string {
-    if (null == $file) {
-      return '';
-    }
-    if (null == $this->siteLanguage) {
-      return '';
-    }
-
-    return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$file->getOriginalResource()->getPublicUrl();
-  }
-
-  protected function getLocalizationFromKey(string $keyToTranslate, string $languageFile = ''): string {
-    if (empty($languageFile)) {
-      $languageFile = $this->languageFile;
-    }
-
-    if (null === $this->siteLanguage || null === $this->languageService || empty($languageFile)) {
-      return $keyToTranslate;
-    }
-
-    $translatedString = $this->languageService->sL('LLL:'.$languageFile.':'.$keyToTranslate);
-
-    if (!empty($translatedString)) {
-      return $translatedString;
-    }
-
-    return $keyToTranslate;
   }
 
   public function resizeAndCropImage(?FileReference $image, string $width = '2480', string $height = '770', string $cropArea = 'default', bool $absUrl = false): ?string {
@@ -233,5 +142,68 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
     }
 
     return '/'.$processedImage->getPublicUrl();
+  }
+
+  /**
+   * Function to build urls without using $this->uriBuilder.
+   *
+   * @param array<string, mixed> $additionalGetParams additional GET parameters
+   * @param null|string          $extensionName       Extension name without underscores. Eg. 'myextension'
+   * @param null|string          $pluginName          Plugin name with underscores. Eg. 'news_show' or 'records_list'
+   * @param null|string          $actionName          Action name (the 'show' of 'news_show')
+   * @param null|string          $controllerName      Name of the controller. Eg. 'News' or 'Record'
+   * @param array<string, mixed> $actionArguments     Additional arguments needed for the Action. Eg. [newsId => 123, ...]
+   */
+  protected function buildUri(int $pageId, array $additionalGetParams = [], ?string $extensionName = null, ?string $pluginName = null, ?string $actionName = null, ?string $controllerName = null, array $actionArguments = [], string $fragment = '', string $type = PageRouter::ABSOLUTE_URL): ?UriInterface {
+    if (null === ($this->site?->getRouter() ?? null)) {
+      return null;
+    }
+
+    $arguments = [
+      ...$additionalGetParams,
+      '_language' => $this->siteLanguage,
+    ];
+
+    if (null !== $extensionName && null !== $pluginName && null !== $actionName && null !== $controllerName) {
+      $arguments = [
+        strtolower("tx_{$extensionName}_{$pluginName}") => [
+          'action' => $actionName,
+          'controller' => $controllerName,
+          ...$actionArguments,
+        ],
+        '_language' => $this->siteLanguage,
+      ];
+    }
+
+    return $this->site->getRouter()->generateUri($pageId, $arguments, $fragment, $type);
+  }
+
+  protected function getAbsPath(?FileReference $file): string {
+    if (null == $file) {
+      return '';
+    }
+    if (null == $this->siteLanguage) {
+      return '';
+    }
+
+    return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$file->getOriginalResource()->getPublicUrl();
+  }
+
+  protected function getLocalizationFromKey(string $keyToTranslate, string $languageFile = ''): string {
+    if (empty($languageFile)) {
+      $languageFile = $this->languageFile;
+    }
+
+    if (null === $this->siteLanguage || null === $this->languageService || empty($languageFile)) {
+      return $keyToTranslate;
+    }
+
+    $translatedString = $this->languageService->sL('LLL:'.$languageFile.':'.$keyToTranslate);
+
+    if (!empty($translatedString)) {
+      return $translatedString;
+    }
+
+    return $keyToTranslate;
   }
 }

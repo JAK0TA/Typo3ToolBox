@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
 use JAKOTA\Typo3ToolBox\Utility\TextUtility;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class WordStatsViewHelper extends AbstractViewHelper {
@@ -21,27 +21,26 @@ class WordStatsViewHelper extends AbstractViewHelper {
     $this->registerArgument('returnStatsAsArray', 'bool', 'Return stats array instead of rendered content', false, false);
   }
 
-  /**
-   * @param array<string, bool|string> $arguments
-   *
-   * @return array<string, mixed>|string
-   */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
-    $templateVariableContainer = $renderingContext->getVariableProvider();
-    $as = strval($arguments['as']);
-    $returnStatsAsArray = $arguments['returnStatsAsArray'] ?? false;
+  public function render(): mixed {
+    if (!$this->renderingContext instanceof RenderingContext) {
+      return $this->renderChildren();
+    }
+
+    $templateVariableContainer = $this->renderingContext->getVariableProvider();
+    $as = strval($this->arguments['as']);
+    $returnStatsAsArray = $this->arguments['returnStatsAsArray'] ?? false;
     $templateVariableContainer->add($as, '');
-    $output = $renderChildrenClosure();
+    $output = $this->renderChildren();
     $templateVariableContainer->remove($as);
 
-    $stats = TextUtility::calculateReadingTime($output);
+    $stats = TextUtility::calculateReadingTime(strval($output));
 
     if ($returnStatsAsArray) {
       return (array) $stats;
     }
 
     $templateVariableContainer->add($as, $stats);
-    $output = $renderChildrenClosure();
+    $output = $this->renderChildren();
     $templateVariableContainer->remove($as);
 
     return $output;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class CacheViewHelper extends AbstractViewHelper {
@@ -17,17 +16,14 @@ class CacheViewHelper extends AbstractViewHelper {
     $this->registerArgument('id', 'mixed', 'Could be all, will be used as cacheHash', true);
   }
 
-  /**
-   * @param array<string, mixed> $arguments
-   */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
+  public function render(): string {
     $cacheLifetime = 3600; // 60*60
     $success = false;
-    $cacheHash = md5(serialize($arguments['id']));
+    $cacheHash = md5(serialize($this->arguments['id']));
 
     $output = apc_fetch($cacheHash, $success);
     if (!$success) {
-      $output = $renderChildrenClosure();
+      $output = $this->renderChildren();
       apc_store($cacheHash, $output, $cacheLifetime);
     }
 

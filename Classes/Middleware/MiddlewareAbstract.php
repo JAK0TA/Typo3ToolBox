@@ -11,9 +11,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 abstract class MiddlewareAbstract implements MiddlewareInterface {
   /**
@@ -60,12 +57,7 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
    * @param string $contentType defaults to JSON content type if omitted
    */
   public function createResponse(string $string, string $contentType = ContentTypeDefinition::DEFAULT): ResponseInterface {
-    $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-    if (version_compare($typo3Version->getVersion(), '10.1.0') >= 0) {
-      $response = $this->responseFactory->createResponse();
-    } else {
-      $response = new Response();
-    }
+    $response = $this->responseFactory->createResponse();
 
     switch ($contentType) {
       case ContentTypeDefinition::DEFAULT:

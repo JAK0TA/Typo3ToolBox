@@ -59,7 +59,7 @@
   "[typoscript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "php-cs-fixer.executablePath": "${workspaceFolder}/vendor/bin/php-cs-fixer",
+  "php-cs-fixer.executablePath": "${workspaceFolder}/docker/docker/bin/php-cs-fixer",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.tabSize": 2,

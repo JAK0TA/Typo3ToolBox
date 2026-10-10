@@ -6,9 +6,7 @@ declare(strict_types=1);
 namespace JAKOTA\Typo3ToolBox\Routing\Aspect;
 
 use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Routing\Aspect\PersistedAliasMapper;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TransSitePersistedAliasMapper extends PersistedAliasMapper {
   /**
@@ -39,17 +37,13 @@ class TransSitePersistedAliasMapper extends PersistedAliasMapper {
       ->where(...$constraints)
     ;
 
-    $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-    if (version_compare($typo3Version->getVersion(), '11.5.0') >= 0) {
-      $results = $queryBuilder->executeQuery()->fetchAllAssociative();
-    } else {
-      $results = $queryBuilder->execute()->fetchAll();
-    }
+    $results = $queryBuilder->executeQuery()->fetchAllAssociative();
 
     // return first result record in case table is not language aware
     if (!$languageAware) {
       return $results[0] ?? null;
     }
+
     // post-process language fallbacks
     return $this->resolveLanguageFallback($results, $this->languageFieldName, $languageIds);
   }

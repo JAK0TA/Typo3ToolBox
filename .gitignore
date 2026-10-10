@@ -6,6 +6,10 @@
 *.iws
 /vendor
 /public
+/docker
+/docker-compose.yml
+/.env
+/var
 
 # System Files
 .DS_Store

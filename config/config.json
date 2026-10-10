@@ -1,0 +1,4 @@
+{
+  "projectname": "typo3toolbox",
+  "dockerPhpVersion": "8.4"
+}

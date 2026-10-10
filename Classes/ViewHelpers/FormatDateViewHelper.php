@@ -6,9 +6,9 @@ declare(strict_types=1);
 namespace JAKOTA\Typo3ToolBox\ViewHelpers;
 
 use JAKOTA\Typo3ToolBox\Utility\DateUtility;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Localization\Locale;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class FormatDateViewHelper extends AbstractViewHelper {
@@ -16,21 +16,22 @@ class FormatDateViewHelper extends AbstractViewHelper {
     $this->registerArgument('pattern', 'string', 'The format pattern', false);
   }
 
-  /**
-   * @param array<string, mixed> $arguments
-   * @param RenderingContext     $renderingContext
-   */
-  public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string {
-    $pattern = strval($arguments['pattern']);
+  public function render(): string {
+    $pattern = strval($this->arguments['pattern']);
 
-    $date = $renderChildrenClosure();
+    $date = $this->renderChildren();
     if (null === $date) {
       return '';
     }
 
-    $siteLanguage = $renderingContext->getRequest()->getAttribute('language');
+    if (!$this->renderingContext instanceof RenderingContext) {
+      return '';
+    }
+
+    $request = $this->renderingContext->getAttribute(ServerRequestInterface::class);
+    $siteLanguage = $request->getAttribute('language');
     if (null !== $siteLanguage) {
-      $locale = new Locale($siteLanguage->getLocale());
+      $locale = $siteLanguage->getLocale();
     } else {
       $locale = new Locale();
     }
@@ -39,6 +40,6 @@ class FormatDateViewHelper extends AbstractViewHelper {
       $date = trim($date);
     }
 
-    return DateUtility::formatDate($date, $pattern, $locale);
+    return DateUtility::formatDate(strval($date), $pattern, $locale);
   }
 }
