@@ -12,6 +12,9 @@ use TYPO3\CMS\Core\TypoScript\IncludeTree\SysTemplateRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\RootlineUtility;
 
+/**
+ * @deprecated this class will be removed
+ * */
 class TypoScriptUtility {
   public function __construct(
     private FrontendTypoScriptFactory $frontendTypoScriptFactory,
