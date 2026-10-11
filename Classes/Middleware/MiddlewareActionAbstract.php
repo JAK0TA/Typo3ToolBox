@@ -23,6 +23,9 @@ use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Service\ImageService;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
+/**
+ * @deprecated this class will be removed, use MiddlewareApiAbstract::class for APIs instead
+ */
 abstract class MiddlewareActionAbstract extends ApiAbstract {
   protected string $languageFile = '';
 

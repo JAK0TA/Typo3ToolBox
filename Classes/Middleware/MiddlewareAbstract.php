@@ -12,6 +12,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * @deprecated this class will be removed, use MiddlewareApiAbstract::class for APIs instead
+ */
 abstract class MiddlewareAbstract implements MiddlewareInterface {
   /**
    * @var RequestHandlerInterface

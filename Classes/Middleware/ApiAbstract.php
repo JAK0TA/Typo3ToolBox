@@ -7,6 +7,9 @@ namespace JAKOTA\Typo3ToolBox\Middleware;
 
 use JAKOTA\Typo3ToolBox\Domain\Model\Api\Response;
 
+/**
+ * @deprecated this class will be removed, use MiddlewareApiAbstract::class for APIs instead
+ */
 abstract class ApiAbstract {
   protected function notAuthorized(Response $response, string $message = 'Not authorized'): Response {
     header('HTTP/1.1 401 Unauthorized');
