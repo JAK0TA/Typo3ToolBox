@@ -160,13 +160,21 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
   /**
    * @param string $contentType defaults to JSON content type if omitted
    */
-  public function createResponse(string $string, string $contentType = ContentTypeDefinition::DEFAULT): void {
+  public function createResponse(string $string, string $contentType = ContentTypeDefinition::DEFAULT, string $fileName = ''): void {
     $response = $this->responseFactory->createResponse();
 
     switch ($contentType) {
       case ContentTypeDefinition::DEFAULT:
       case ContentTypeDefinition::JSON:
         $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
+
+        break;
+
+      case ContentTypeDefinition::FILE_PLAIN:
+        $response = $response
+          ->withHeader('Content-Type', 'text/plain; charset=utf-8')
+          ->withAddedHeader('Content-Disposition', 'attachment; filename="'.$fileName.'"')
+        ;
 
         break;
 

@@ -8,6 +8,8 @@ namespace JAKOTA\Typo3ToolBox\Definition;
 class ContentTypeDefinition {
   public const DEFAULT = 'default';
 
+  public const FILE_PLAIN = 'filePlain';
+
   public const JSON = 'json';
 
   public const TEXT = 'text';
