@@ -62,7 +62,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
    * @throws \InvalidArgumentException
    */
   public function __construct(ServerRequestInterface $request, $pathParams) {
-    $this->site = $this->request->getAttribute('site') ?? new Site('', 0, []);
+    $this->site = $request->getAttribute('site');
     $this->request = GeneralUtility::makeInstance(TypoScriptUtility::class)->addTypoScriptSetupToRequest($request, $this->site);
     $this->pathParams = $pathParams;
     $this->queryParams = $this->request->getQueryParams();
