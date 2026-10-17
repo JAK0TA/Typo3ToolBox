@@ -102,6 +102,11 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
   protected $request;
 
   /**
+   * @var array<int|string, mixed>|object
+   */
+  protected $requestBody = [];
+
+  /**
    * @var ?ResponseInterface
    */
   protected $response;
@@ -225,6 +230,13 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
     return $this->request;
   }
 
+  /**
+   * @return array<int|string, mixed>|object
+   */
+  public function getRequestBody(): array|object {
+    return $this->requestBody;
+  }
+
   public function getSite(): ?Site {
     return $this->site;
   }
@@ -237,6 +249,15 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
     $this->request = $request;
     $this->handler = $handler;
     $this->site = $this->request->getAttribute('site');
+
+    $contentType = $this->request->getHeaderLine('Content-Type');
+    if (false !== stripos($contentType, 'application/json')) {
+      /** @var array<int|string, mixed> $parsedBody */
+      $parsedBody = json_decode($this->request->getBody()->getContents(), true) ?: [];
+      $this->requestBody = $parsedBody;
+    } else {
+      $this->requestBody = $this->request->getParsedBody() ?? [];
+    }
 
     $langId = $this->request->getQueryParams()['L'] ?? false;
     if (false !== $langId) {
