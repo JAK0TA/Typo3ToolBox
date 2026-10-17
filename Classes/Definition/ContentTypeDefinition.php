@@ -10,6 +10,8 @@ class ContentTypeDefinition {
 
   public const FILE_PLAIN = 'filePlain';
 
+  public const IMAGE_JPEG = 'imageJpeg';
+
   public const JSON = 'json';
 
   public const TEXT = 'text';

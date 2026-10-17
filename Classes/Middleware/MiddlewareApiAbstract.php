@@ -178,6 +178,11 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
 
         break;
 
+      case ContentTypeDefinition::IMAGE_JPEG:
+        $response = $response->withHeader('Content-Type', 'image/jpeg');
+
+        break;
+
       case ContentTypeDefinition::XML:
         $response = $response->withHeader('Content-Type', 'application/xml; charset=utf-8');
 
