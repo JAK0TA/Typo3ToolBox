@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Middleware;
 
+use JAKOTA\Typo3ToolBox\Definition\ApiMethodDefinition;
 use JAKOTA\Typo3ToolBox\Definition\ContentTypeDefinition;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,7 +42,7 @@ use TYPO3\CMS\Frontend\Controller\ErrorController;
  * class ApiName extends MiddlewareApiAbstract {
  *   protected function handleApiRequests(): void {
  *     $this->handleApiCall('ApiName', 'endpointName1', $this->handleEndpointName1(...));
- *     $this->handleApiCall('ApiName', 'endpointName2', $this->handleEndpointName2(...));
+ *     $this->handleApiCall('ApiName', 'endpointName2', $this->handleEndpointName2(...), ApiMethodDefinition::POST);
  *   }
  *   /**
  *    * @param array<string, mixed> $apiArguments
@@ -341,7 +342,7 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
   /**
    * @param (callable(array<string, mixed> $pathParams): void) $callable
    */
-  protected function handleApiCall(string $apiName, string $apiEndpoint, callable $callable, string $method = 'GET'): void {
+  protected function handleApiCall(string $apiName, string $apiEndpoint, callable $callable, string $method = ApiMethodDefinition::GET): void {
     if (false !== $apiArguments = $this->getApiArguments($apiName, $apiEndpoint, $method)) {
       $callable($apiArguments);
     }
@@ -352,7 +353,7 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
   /**
    * @return array<string, string>|false
    */
-  private function getApiArguments(string $apiName, string $apiEndpoint, string $method = 'GET'): array|false {
+  private function getApiArguments(string $apiName, string $apiEndpoint, string $method = ApiMethodDefinition::GET): array|false {
     if (empty($this->apis)) {
       $this->apis = $this->request->getAttribute('routing')?->getStaticArguments() ?? [];
     }
