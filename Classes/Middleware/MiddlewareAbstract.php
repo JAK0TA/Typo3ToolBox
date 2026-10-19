@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Middleware;
 
+use JAKOTA\Typo3ToolBox\Definition\ApiMethodDefinition;
 use JAKOTA\Typo3ToolBox\Definition\ContentTypeDefinition;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -87,14 +88,14 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function delete(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, 'DELETE');
+    $this->checkRequest($path, $callable, ApiMethodDefinition::DELETE);
   }
 
   /**
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function get(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, 'GET');
+    $this->checkRequest($path, $callable, ApiMethodDefinition::GET);
   }
 
   public function handleRequests(): ResponseInterface {
@@ -114,21 +115,21 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function patch(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, 'PATCH');
+    $this->checkRequest($path, $callable, ApiMethodDefinition::PATCH);
   }
 
   /**
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function post(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, 'POST');
+    $this->checkRequest($path, $callable, ApiMethodDefinition::POST);
   }
 
   /**
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function put(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, 'PUT');
+    $this->checkRequest($path, $callable, ApiMethodDefinition::PUT);
   }
 
   protected function addPathParam(string $path, string $key, string $val): void {
