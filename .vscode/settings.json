@@ -60,6 +60,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "php-cs-fixer.executablePath": "${workspaceFolder}/docker/docker/bin/php-cs-fixer",
+  "php-cs-fixer.config": "./.vscode/.php-cs-fixer.php",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
