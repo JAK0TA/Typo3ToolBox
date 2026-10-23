@@ -17,4 +17,18 @@ class ApiResponse {
   public bool $success = false;
 
   public function __construct() {}
+
+  public function notAuthorized(string $message = 'Not authorized'): self {
+    $this->errorCode = 401;
+    $this->errorMessage = $message;
+
+    return $this;
+  }
+
+  public function serverError(string $message): self {
+    $this->errorCode = 500;
+    $this->errorMessage = $message;
+
+    return $this;
+  }
 }
