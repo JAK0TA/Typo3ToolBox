@@ -7,6 +7,7 @@ namespace JAKOTA\Typo3ToolBox\Middleware;
 
 use JAKOTA\Typo3ToolBox\Definition\ApiMethodDefinition;
 use JAKOTA\Typo3ToolBox\Definition\ContentTypeDefinition;
+use JAKOTA\Typo3ToolBox\Domain\Model\Api\ApiResponse;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -88,6 +89,8 @@ use TYPO3\CMS\Frontend\Controller\ErrorController;
  * }
  */
 abstract class MiddlewareApiAbstract implements MiddlewareInterface {
+  final public readonly ApiResponse $apiResponse;
+
   public string $languageFile = '';
 
   /**
@@ -127,7 +130,9 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
     protected ResponseFactoryInterface $responseFactory,
     protected UriBuilder $uriBuilder,
     protected ErrorController $errorController
-  ) {}
+  ) {
+    $this->apiResponse = new ApiResponse();
+  }
 
   /**
    * Function to build urls without using $this->uriBuilder.
@@ -255,6 +260,7 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
     $this->request = $request;
     $this->handler = $handler;
     $this->site = $this->request->getAttribute('site');
+    $this->apiResponse->call = $this->request->getUri()->getPath();
 
     $contentType = $this->request->getHeaderLine('Content-Type');
     if (false !== stripos($contentType, 'application/json')) {
