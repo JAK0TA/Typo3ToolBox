@@ -170,8 +170,9 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
 
   /**
    * @param ContentTypeDefinition $contentType defaults to JSON content type if omitted
+   * @param array<string, string> $withHeaders
    */
-  public function createResponse(string $string, ContentTypeDefinition $contentType = ContentTypeDefinition::DEFAULT, string $fileName = ''): void {
+  public function createResponse(string $string, ContentTypeDefinition $contentType = ContentTypeDefinition::DEFAULT, string $fileName = '', array $withHeaders = []): void {
     $response = $this->responseFactory->createResponse();
 
     switch ($contentType) {
@@ -181,10 +182,27 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
 
         break;
 
+      case ContentTypeDefinition::FILE_OCTET_STREAM:
+        $response = $response
+          ->withHeader('Content-Type', 'application/octet-stream')
+          ->withHeader('Content-Disposition', 'attachment; filename="'.$fileName.'"')
+          ->withHeader('Content-Transfer-Encoding', 'binary')
+          ->withHeader('Expires', '0')
+          ->withHeader('Cache-Control', 'must-revalidate')
+          ->withHeader('Pragma', 'public')
+          ->withHeader('Content-Length', (string) strlen($string))
+        ;
+
+        break;
+
       case ContentTypeDefinition::FILE_PLAIN:
         $response = $response
           ->withHeader('Content-Type', 'text/plain; charset=utf-8')
-          ->withAddedHeader('Content-Disposition', 'attachment; filename="'.$fileName.'"')
+          ->withHeader('Content-Disposition', 'attachment; filename="'.$fileName.'"')
+          ->withHeader('Expires', '0')
+          ->withHeader('Cache-Control', 'must-revalidate')
+          ->withHeader('Pragma', 'public')
+          ->withHeader('Content-Length', (string) strlen($string))
         ;
 
         break;
@@ -201,6 +219,10 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
 
       default:
         break;
+    }
+
+    foreach ($withHeaders as $name => $value) {
+      $response = $response->withHeader($name, $value);
     }
 
     $response->getBody()->write($string);
