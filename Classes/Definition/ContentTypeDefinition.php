@@ -8,6 +8,8 @@ namespace JAKOTA\Typo3ToolBox\Definition;
 enum ContentTypeDefinition {
   case DEFAULT;
 
+  case FILE_OCTET_STREAM;
+
   case FILE_PLAIN;
 
   case IMAGE_JPEG;
