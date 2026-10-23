@@ -170,8 +170,9 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
 
   /**
    * @param ContentTypeDefinition $contentType defaults to JSON content type if omitted
+   * @param array<string, string> $withHeaders
    */
-  public function createResponse(string $string, ContentTypeDefinition $contentType = ContentTypeDefinition::DEFAULT, string $fileName = ''): void {
+  public function createResponse(string $string, ContentTypeDefinition $contentType = ContentTypeDefinition::DEFAULT, string $fileName = '', array $withHeaders = []): void {
     $response = $this->responseFactory->createResponse();
 
     switch ($contentType) {
@@ -218,6 +219,10 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
 
       default:
         break;
+    }
+
+    foreach ($withHeaders as $name => $value) {
+      $response = $response->withHeader($name, $value);
     }
 
     $response->getBody()->write($string);
