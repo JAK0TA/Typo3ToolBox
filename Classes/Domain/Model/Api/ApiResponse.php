@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Domain\Model\Api;
 
-class Response {
+class ApiResponse {
   /**
    * @var string
    */
