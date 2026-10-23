@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Utility;
 
-use TYPO3\CMS\Core\Http\ServerRequest;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScriptFactory;
 use TYPO3\CMS\Core\TypoScript\IncludeTree\SysTemplateRepository;
@@ -21,7 +21,7 @@ class TypoScriptUtility {
     private SysTemplateRepository $sysTemplateRepository
   ) {}
 
-  public function addTypoScriptSetupToRequest(ServerRequest $request, Site $site): ServerRequest {
+  public function addTypoScriptSetupToRequest(ServerRequestInterface $request, Site $site): ServerRequestInterface {
     $rootLine = GeneralUtility::makeInstance(RootlineUtility::class, $site->getRootPageId())->get();
 
     $rootLineForSysTemplates = $rootLine;
