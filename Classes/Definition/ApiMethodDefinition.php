@@ -5,40 +5,40 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Definition;
 
-class ApiMethodDefinition {
-  public const CONNECT = 'CONNECT';
+enum ApiMethodDefinition {
+  case CONNECT;
 
-  public const COPY = 'COPY';
+  case COPY;
 
-  public const DELETE = 'DELETE';
+  case DELETE;
 
-  public const GET = 'GET';
+  case GET;
 
-  public const HEAD = 'HEAD';
+  case HEAD;
 
-  public const LOCK = 'LOCK';
+  case LOCK;
 
-  public const MKCOL = 'MKCOL';
+  case MKCOL;
 
-  public const MOVE = 'MOVE';
+  case MOVE;
 
-  public const OPTIONS = 'OPTIONS';
+  case OPTIONS;
 
-  public const PATCH = 'PATCH';
+  case PATCH;
 
-  public const POST = 'POST';
+  case POST;
 
-  public const PROPFIND = 'PROPFIND';
+  case PROPFIND;
 
-  public const PROPPATCH = 'PROPPATCH';
+  case PROPPATCH;
 
-  public const PUT = 'PUT';
+  case PUT;
 
-  public const QUERY = 'QUERY';
+  case QUERY;
 
-  public const REPORT = 'REPORT';
+  case REPORT;
 
-  public const TRACE = 'TRACE';
+  case TRACE;
 
-  public const UNLOCK = 'UNLOCK';
+  case UNLOCK;
 }

@@ -164,9 +164,9 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
   }
 
   /**
-   * @param string $contentType defaults to JSON content type if omitted
+   * @param ContentTypeDefinition $contentType defaults to JSON content type if omitted
    */
-  public function createResponse(string $string, string $contentType = ContentTypeDefinition::DEFAULT, string $fileName = ''): void {
+  public function createResponse(string $string, ContentTypeDefinition $contentType = ContentTypeDefinition::DEFAULT, string $fileName = ''): void {
     $response = $this->responseFactory->createResponse();
 
     switch ($contentType) {
@@ -342,7 +342,7 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
   /**
    * @param (callable(array<string, mixed> $pathParams): void) $callable
    */
-  protected function handleApiCall(string $apiName, string $apiEndpoint, callable $callable, string $method = ApiMethodDefinition::GET): void {
+  protected function handleApiCall(string $apiName, string $apiEndpoint, callable $callable, ApiMethodDefinition $method = ApiMethodDefinition::GET): void {
     if (false !== $apiArguments = $this->getApiArguments($apiName, $apiEndpoint, $method)) {
       $callable($apiArguments);
     }
@@ -353,7 +353,7 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
   /**
    * @return array<string, string>|false
    */
-  private function getApiArguments(string $apiName, string $apiEndpoint, string $method = ApiMethodDefinition::GET): array|false {
+  private function getApiArguments(string $apiName, string $apiEndpoint, ApiMethodDefinition $method = ApiMethodDefinition::GET): array|false {
     if (empty($this->apis)) {
       $this->apis = $this->request->getAttribute('routing')?->getStaticArguments() ?? [];
     }
@@ -361,7 +361,7 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
       return false;
     }
 
-    if (strtoupper($method) != $this->request->getMethod()) {
+    if ($method->name != $this->request->getMethod()) {
       return false;
     }
 
