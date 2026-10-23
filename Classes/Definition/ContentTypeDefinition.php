@@ -5,16 +5,16 @@ declare(strict_types=1);
 
 namespace JAKOTA\Typo3ToolBox\Definition;
 
-class ContentTypeDefinition {
-  public const DEFAULT = 'default';
+enum ContentTypeDefinition {
+  case DEFAULT;
 
-  public const FILE_PLAIN = 'filePlain';
+  case FILE_PLAIN;
 
-  public const IMAGE_JPEG = 'imageJpeg';
+  case IMAGE_JPEG;
 
-  public const JSON = 'json';
+  case JSON;
 
-  public const TEXT = 'text';
+  case TEXT;
 
-  public const XML = 'xml';
+  case XML;
 }

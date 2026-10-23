@@ -60,17 +60,17 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
   /**
    * @param string $contentType defaults to JSON content type if omitted
    */
-  public function createResponse(string $string, string $contentType = ContentTypeDefinition::DEFAULT): ResponseInterface {
+  public function createResponse(string $string, string $contentType = ContentTypeDefinition::DEFAULT->name): ResponseInterface {
     $response = $this->responseFactory->createResponse();
 
     switch ($contentType) {
-      case ContentTypeDefinition::DEFAULT:
-      case ContentTypeDefinition::JSON:
+      case ContentTypeDefinition::DEFAULT->name:
+      case ContentTypeDefinition::JSON->name:
         $response = $response->withHeader('Content-Type', 'application/json; charset=utf-8');
 
         break;
 
-      case ContentTypeDefinition::XML:
+      case ContentTypeDefinition::XML->name:
         $response = $response->withHeader('Content-Type', 'application/xml; charset=utf-8');
 
         break;
@@ -88,14 +88,14 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function delete(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, ApiMethodDefinition::DELETE);
+    $this->checkRequest($path, $callable, ApiMethodDefinition::DELETE->name);
   }
 
   /**
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function get(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, ApiMethodDefinition::GET);
+    $this->checkRequest($path, $callable, ApiMethodDefinition::GET->name);
   }
 
   public function handleRequests(): ResponseInterface {
@@ -115,21 +115,21 @@ abstract class MiddlewareAbstract implements MiddlewareInterface {
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function patch(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, ApiMethodDefinition::PATCH);
+    $this->checkRequest($path, $callable, ApiMethodDefinition::PATCH->name);
   }
 
   /**
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function post(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, ApiMethodDefinition::POST);
+    $this->checkRequest($path, $callable, ApiMethodDefinition::POST->name);
   }
 
   /**
    * @param (callable(array<string, mixed> $pathParams): ?ResponseInterface) $callable
    */
   public function put(string $path, callable $callable): void {
-    $this->checkRequest($path, $callable, ApiMethodDefinition::PUT);
+    $this->checkRequest($path, $callable, ApiMethodDefinition::PUT->name);
   }
 
   protected function addPathParam(string $path, string $key, string $val): void {
