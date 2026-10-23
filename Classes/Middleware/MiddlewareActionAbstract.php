@@ -63,7 +63,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
    */
   public function __construct(ServerRequestInterface $request, $pathParams) {
     $this->site = $request->getAttribute('site');
-    $this->request = GeneralUtility::makeInstance(TypoScriptUtility::class)->addTypoScriptSetupToRequest($request, $this->site);
+    $this->request = null !== $this->site ? GeneralUtility::makeInstance(TypoScriptUtility::class)->addTypoScriptSetupToRequest($request, $this->site) : $request;
     $this->pathParams = $pathParams;
     $this->queryParams = $this->request->getQueryParams();
 
@@ -78,7 +78,7 @@ abstract class MiddlewareActionAbstract extends ApiAbstract {
 
     $langId = $this->queryParams['L'] ?? false;
     if (false != $langId) {
-      $this->siteLanguage = $this->site->getLanguageById(intval($langId));
+      $this->siteLanguage = $this->site?->getLanguageById(intval($langId));
       $this->request = $this->request->withAttribute('language', $this->siteLanguage);
     } else {
       $this->siteLanguage = $this->request->getAttribute('language');
