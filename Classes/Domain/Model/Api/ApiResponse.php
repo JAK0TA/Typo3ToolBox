@@ -6,32 +6,15 @@ declare(strict_types=1);
 namespace JAKOTA\Typo3ToolBox\Domain\Model\Api;
 
 class ApiResponse {
-  /**
-   * @var string
-   */
-  public $call;
+  public string $call = '';
 
-  /**
-   * @var mixed
-   */
-  public $data;
+  public mixed $data = null;
 
-  /**
-   * @var int
-   */
-  public $errorCode = 0;
+  public int $errorCode = 0;
 
-  /**
-   * @var string
-   */
-  public $errorMessage = '';
+  public string $errorMessage = '';
 
-  /**
-   * @var bool
-   */
-  public $success = false;
+  public bool $success = false;
 
-  public function __construct(string $call) {
-    $this->call = $call;
-  }
+  public function __construct() {}
 }
