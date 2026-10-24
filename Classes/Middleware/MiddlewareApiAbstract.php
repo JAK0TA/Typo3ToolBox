@@ -357,14 +357,16 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
     return '/'.$processedImage->getPublicUrl();
   }
 
-  public function responseNotAuthorized(string $message = 'Not authorized'): void {
+  public function responseNotAuthorized(string $message = 'Not authorized', string $data = ''): void {
     header('HTTP/'.$this->request->getProtocolVersion().' 401 Unauthorized');
     $this->response = $this->responseFactory->createResponse(401, $message);
+    $this->response->getBody()->write($data);
   }
 
-  public function responseServerError(string $message): void {
+  public function responseServerError(string $message, string $data = ''): void {
     header('Error: '.$message);
     $this->response = $this->responseFactory->createResponse(500, 'Internal Server Error');
+    $this->response->getBody()->write($data);
   }
 
   /**
