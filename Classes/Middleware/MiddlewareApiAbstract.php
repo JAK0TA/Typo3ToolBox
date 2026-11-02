@@ -17,6 +17,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Imaging\ImageManipulation\CropVariantCollection;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Routing\PageRouter;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
@@ -208,7 +209,9 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
         break;
 
       case ContentTypeDefinition::IMAGE_JPEG:
-        $response = $response->withHeader('Content-Type', 'image/jpeg');
+        $response = $response->withHeader('Content-Type', 'image/jpeg')
+          ->withHeader('Content-Length', (string) strlen($string))
+        ;
 
         break;
 
@@ -313,24 +316,39 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
     return $this->handler->handle($this->request);
   }
 
-  public function resizeAndCropImage(?FileReference $image, string $width = '2480', string $height = '770', string $cropArea = 'default', bool $absUrl = false): ?string {
+  public function resizeAndCropImage(FileInterface|FileReference|null $image, string $width = '2480', string $height = '770', string $cropArea = 'default', bool $absUrl = false): ?string {
     if (null == $image) {
       return null;
     }
 
-    if ('svg' == strtolower($image->getOriginalResource()->getExtension())) {
-      if ($absUrl) {
-        if (null == $this->siteLanguage) {
-          return '/'.$image->getOriginalResource()->getPublicUrl();
+    if ($image instanceof FileInterface) {
+      if ('svg' == $image->getExtension()) {
+        if ($absUrl) {
+          if (null == $this->siteLanguage) {
+            return '/'.$image->getPublicUrl();
+          }
+
+          return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$image->getPublicUrl();
         }
 
-        return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$image->getOriginalResource()->getPublicUrl();
+        return '/'.$image->getPublicUrl();
+      }
+      $getImage = $image;
+    } else {
+      if ('svg' == strtolower($image->getOriginalResource()->getExtension())) {
+        if ($absUrl) {
+          if (null == $this->siteLanguage) {
+            return '/'.$image->getOriginalResource()->getPublicUrl();
+          }
+
+          return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$image->getOriginalResource()->getPublicUrl();
+        }
+
+        return '/'.$image->getOriginalResource()->getPublicUrl();
       }
 
-      return '/'.$image->getOriginalResource()->getPublicUrl();
+      $getImage = $this->imageService->getImage('', $image, false);
     }
-
-    $getImage = $this->imageService->getImage('', $image, false);
 
     $cropString = null;
     if ($getImage->hasProperty('crop') && $getImage->getProperty('crop')) {
