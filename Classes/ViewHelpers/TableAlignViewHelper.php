@@ -10,6 +10,13 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 
 class TableAlignViewHelper extends AbstractViewHelper {
   /**
+   * As this ViewHelper renders HTML, the output must not be escaped.
+   *
+   * @var bool
+   */
+  protected $escapeOutput = false;
+
+  /**
    * Initialize arguments.
    *
    * @throws Exception
