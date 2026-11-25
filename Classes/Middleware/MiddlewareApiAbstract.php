@@ -316,7 +316,7 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
     return $this->handler->handle($this->request);
   }
 
-  public function resizeAndCropImage(FileInterface|FileReference|null $image, string $width = '2480', string $height = '770', string $cropArea = 'default', bool $absUrl = false): ?string {
+  public function resizeAndCropImage(FileInterface|FileReference|null $image, string $width = '2480', string $height = '770', string $cropArea = 'default', bool $absUrl = false, bool $localFile = false): ?string {
     if (null == $image) {
       return null;
     }
@@ -330,6 +330,9 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
 
           return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$image->getPublicUrl();
         }
+        if ($localFile) {
+          return $image->getForLocalProcessing(false);
+        }
 
         return '/'.$image->getPublicUrl();
       }
@@ -342,6 +345,9 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
           }
 
           return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$image->getOriginalResource()->getPublicUrl();
+        }
+        if ($localFile) {
+          return $image->getOriginalResource()->getForLocalProcessing(false);
         }
 
         return '/'.$image->getOriginalResource()->getPublicUrl();
@@ -370,6 +376,10 @@ abstract class MiddlewareApiAbstract implements MiddlewareInterface {
       }
 
       return $this->siteLanguage->getBase()->getScheme().'://'.$this->siteLanguage->getBase()->getHost().'/'.$processedImage->getPublicUrl();
+    }
+
+    if ($localFile) {
+      return $processedImage->getForLocalProcessing(false);
     }
 
     return '/'.$processedImage->getPublicUrl();
